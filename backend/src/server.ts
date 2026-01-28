@@ -27,7 +27,7 @@ app.use(express.json());
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'ofregek', timestamp: new Date().toISOString() });
+    res.json({ status: 'ogregergk', timestamp: new Date().toISOString() });
 });
 
 const PORT = process.env.PORT || 3001;
