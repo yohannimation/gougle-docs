@@ -1,18 +1,20 @@
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import DocumentPreviewCard from "../DocumentPreviewCard/DocumentPreviewCard";
 
 import type { DocumentCardInterface } from "../../interface/Document.interface";
+
+import { PenLine, Trash } from "lucide-react"
 
 interface DocumentCardProps {
     document: DocumentCardInterface
 }
 
-import { Eye, PenLine, Trash } from "lucide-react"
 
 export default function DocumentCard({document}: DocumentCardProps) {
     return (
@@ -21,9 +23,7 @@ export default function DocumentCard({document}: DocumentCardProps) {
                 <CardTitle>{document.name}</CardTitle>
             </CardHeader>
             <CardFooter className="grid grid-cols-3 gap-2">
-                <Button size="icon" variant="secondary" className="w-full">
-                    <Eye /> Preview
-                </Button>
+                <DocumentPreviewCard id={document.id} name={document.name} />
                 {
                     document.isEditable && (
                         <>
