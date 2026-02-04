@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState } from 'react'
 
 import { useParams } from 'next/navigation'
 
@@ -14,9 +15,12 @@ import { Editor } from '@tiptap/react'
 
 export default function DocsEditor() {
     const { docId } = useParams()
+    const [content, setContent] = useState('');
+    const [editable, setEditable] = useState<boolean>(false)
 
     const editor: Editor | null = useEditor({
-        content: '<p>Hello World!</p>',
+        content,
+        editable,
         extensions: [
             StarterKit,
             Highlight,
@@ -25,11 +29,13 @@ export default function DocsEditor() {
             })
         ],
         immediatelyRender: false,
+        autofocus: true,
+        injectCSS: false,
         editorProps: {
             attributes: {
                 class: "min-h-[156px] border rounded-md bg-slate-50 py-2 px-3"
             }
-        }
+        },
     })
 
     const editorState = useEditorState({
@@ -54,13 +60,24 @@ export default function DocsEditor() {
         },
     });
 
+    // Asynchronous fetch data
+    useEffect(() => {
+        setTimeout(() => {
+            setContent("<p>my content</p>")
+            setEditable(true)
+            
+            editor?.commands.setContent(content)
+            editor?.setEditable(editable)
+        }, 2000)
+    }, [docId, editor, content, editable])
+
     return (<>
         <h1 className='mb-5'>editor {docId}</h1>
         <div className='flex flex-col gap-3'>
             {
-                editor ? (
+                editor && content !== '' ? (
                     <>
-                        <TipTapMenu editor={editor} />
+                        <TipTapMenu editor={editor} editable={editable} />
                         <EditorContent editor={editor} />
                     </>
                 ) : (
