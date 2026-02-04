@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -22,13 +24,15 @@ export default function DocumentCard({document}: DocumentCardProps) {
                 <CardTitle>{document.name}</CardTitle>
             </CardHeader>
             <CardFooter className="grid grid-cols-3 gap-2">
-                <DocumentPreviewCard id={document.id} name={document.name} />
+                <DocumentPreviewCard id={document.id} name={document.name} isEditable={document.isEditable} />
                 {
                     document.isEditable && (
                         <>
-                            <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
-                                <PenLine /> Edit
-                            </Button>
+                            <Link href={`/docs/${document.id}`} target="_blank">
+                                <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
+                                    <PenLine /> Edit
+                                </Button>
+                            </Link>
                             <Button className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white">
                                 <Trash /> Delete
                             </Button>

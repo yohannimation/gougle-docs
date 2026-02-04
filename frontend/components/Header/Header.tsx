@@ -9,7 +9,7 @@ export default function Header() {
         <header className="flex justify-between items-center py-4 px-10 border-b-1">
             <Link href="/" title="Home page">Gougle doc</Link>
             <div className="flex items-end gap-2">
-                <Link href='docs' className="flex items-center gap-2" title="New document">
+                <Link href='/docs' className="flex items-center gap-2" title="New document">
                     <Button className="bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white">
                         <File /> Documents
                     </Button>

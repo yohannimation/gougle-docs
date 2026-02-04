@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { JSX, useState } from "react";
 
 import { Button } from "@/components/ui/button"
@@ -16,9 +17,10 @@ import { Eye, PenLine, Trash } from "lucide-react"
 interface DocumentPreviewProps {
     id: string
     name: string
+    isEditable: boolean
 }
 
-export default function DocumentPreviewCard({id, name}: DocumentPreviewProps) {
+export default function DocumentPreviewCard({id, name, isEditable}: DocumentPreviewProps) {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [content, setContent] = useState<JSX.Element[]|null>(null)
 
@@ -68,11 +70,13 @@ export default function DocumentPreviewCard({id, name}: DocumentPreviewProps) {
                 
                 <DialogFooter className="grid grid-cols-2 gap-2">
                     {
-                        !isLoading && (
+                        (!isLoading && isEditable) && (
                             <>
-                                <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
-                                    <PenLine /> Edit
-                                </Button>
+                                <Link href={`/docs/${id}`} target="_blank">
+                                    <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
+                                        <PenLine /> Edit
+                                    </Button>
+                                </Link>
                                 <Button className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white">
                                     <Trash /> Delete
                                 </Button>
