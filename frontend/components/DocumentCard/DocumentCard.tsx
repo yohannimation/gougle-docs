@@ -15,7 +15,6 @@ interface DocumentCardProps {
     document: DocumentCardInterface
 }
 
-
 export default function DocumentCard({document}: DocumentCardProps) {
     return (
         <Card className="relative mx-auto w-full max-w-sm gap-3">
@@ -27,10 +26,10 @@ export default function DocumentCard({document}: DocumentCardProps) {
                 {
                     document.isEditable && (
                         <>
-                            <Button size="icon" variant="secondary" className="w-full bg-orange-300 text-orange-800 hover:bg-orange-300 hover:text-orange-800">
+                            <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
                                 <PenLine /> Edit
                             </Button>
-                            <Button size="icon" variant="destructive" className="w-full">
+                            <Button className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white">
                                 <Trash /> Delete
                             </Button>
                         </>

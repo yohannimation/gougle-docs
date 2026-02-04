@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Spinner } from "@/components/ui/spinner"
 
-import { Eye } from "lucide-react"
+import { Eye, PenLine, Trash } from "lucide-react"
 
 interface DocumentPreviewProps {
     id: string
@@ -47,11 +48,11 @@ export default function DocumentPreviewCard({id, name}: DocumentPreviewProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button size="icon" variant="secondary" className="w-full" onClick={(e) => searchContent(id)}>
+                <Button className="w-full bg-slate-200 text-slate-700 hover:bg-slate-500 hover:text-white" onClick={(e) => searchContent(id)}>
                     <Eye /> Preview
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-none">
+            <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{name}</DialogTitle>
                 </DialogHeader>
@@ -64,6 +65,21 @@ export default function DocumentPreviewCard({id, name}: DocumentPreviewProps) {
                             )
                     }
                 </div>
+                
+                <DialogFooter className="grid grid-cols-2 gap-2">
+                    {
+                        !isLoading && (
+                            <>
+                                <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
+                                    <PenLine /> Edit
+                                </Button>
+                                <Button className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white">
+                                    <Trash /> Delete
+                                </Button>
+                            </>
+                        )
+                    }
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
