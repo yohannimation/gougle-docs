@@ -6,6 +6,7 @@ import { useEditor, EditorContent, useEditorState } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import TextAlign from '@tiptap/extension-text-align'
+import { Spinner } from '@/components/ui/spinner'
 
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu'
 
@@ -56,8 +57,18 @@ export default function DocsEditor() {
     return (<>
         <h1 className='mb-5'>editor {docId}</h1>
         <div className='flex flex-col gap-3'>
-            <TipTapMenu editor={editor} />
-            <EditorContent editor={editor} />
+            {
+                editor ? (
+                    <>
+                        <TipTapMenu editor={editor} />
+                        <EditorContent editor={editor} />
+                    </>
+                ) : (
+                    <>
+                        <Spinner className="m-auto mt-20 size-8" />
+                    </>
+                )
+            }
         </div>
     </>)
 }
