@@ -15,12 +15,13 @@ import { Editor } from '@tiptap/react'
 
 export default function DocsEditor() {
     const { docId } = useParams()
-    const [content, setContent] = useState('');
-    const [editable, setEditable] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isEditable, setIsEditable] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     const editor: Editor | null = useEditor({
-        content,
-        editable,
+        content: '',
+        editable: false,
         extensions: [
             StarterKit,
             Highlight,
@@ -62,27 +63,70 @@ export default function DocsEditor() {
 
     // Asynchronous fetch data
     useEffect(() => {
-        setTimeout(() => {
-            setContent("<p>my content</p>")
-            setEditable(true)
-            
-            editor?.commands.setContent(content)
-            editor?.setEditable(editable)
-        }, 2000)
-    }, [docId, editor, content, editable])
+        const fetchDocument = async () => {
+            try {
+                setIsEditable(false)
+                setIsLoading(true)
+                setError(null)
+
+                // Emulate fetch
+                await new Promise(resolve => setTimeout(resolve, 500))
+                const content = "<p>My content loaded!</p>"
+
+                // Editor update
+                if (editor) {
+                    editor.commands.setContent(content)
+                    editor.setEditable(true)
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Erreur lors du chargement')
+            } finally {
+                setIsEditable(true)
+                setIsLoading(false)
+            }
+        }
+
+        if (editor) {
+            fetchDocument()
+        }
+    }, [docId, editor])
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+                <Spinner className="size-8" />
+                <p className="text-sm text-gray-500">Loading...</p>
+            </div>
+        )
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+                <div className="text-red-500 text-center">
+                    <p className="font-semibold">Error</p>
+                    <p className="text-sm">{error}</p>
+                </div>
+                <button 
+                    onClick={() => window.location.reload()} 
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Try again
+                </button>
+            </div>
+        )
+    }
 
     return (<>
         <h1 className='mb-5'>editor {docId}</h1>
         <div className='flex flex-col gap-3'>
             {
-                editor && content !== '' ? (
+                editor && (
                     <>
-                        <TipTapMenu editor={editor} editable={editable} />
+                        <TipTapMenu editor={editor} editable={isEditable} />
                         <EditorContent editor={editor} />
-                    </>
-                ) : (
-                    <>
-                        <Spinner className="m-auto mt-20 size-8" />
                     </>
                 )
             }
