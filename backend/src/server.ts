@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-// Configuration CORS
+// CORS configuration
 const io = new Server(httpServer, {
     cors: {
         origin: process.env.FRONTEND_URL || 'http://localhost:3000',
@@ -27,7 +27,7 @@ app.use(express.json());
 
 // Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'ogregergk', timestamp: new Date().toISOString() });
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 const PORT = process.env.PORT || 3001;
