@@ -1,28 +1,34 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useDocuments } from '@/hooks/useDocuments'
 
-import DocumentCardList from "@/components/DocumentCardList/DocumentCardList";
-
-import type { DocumentCardListInterface } from "../../interface/Document.interface";
+import DocumentCard from "@/components/DocumentCard/DocumentCard";
+import DocumentCardSkeleton from "@/components/DocumentCardSkeleton/DocumentCardSkeleton";
 
 export default function Docs() {
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const documents: DocumentCardListInterface = [
-        {
-            id: "0",
-            name: "document test",
-            isEditable: true
-        }
-    ]
+    const { documents, isLoading, error, createDocument, deleteDocument } = useDocuments()
 
-    useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 500)
-    }, [])
+    // Skeleton cards
+    const skeletons = [...Array(10)].map((_, i) => (
+        <li key={i}><DocumentCardSkeleton /></li>
+    ));
+
+    if (isLoading) {
+        return (<>
+            <h1>Docs</h1>
+            <ul className="mt-3 grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+                { skeletons }
+            </ul>
+        </>)
+    }
 
     return (<>
         <h1>Docs</h1>
-        <DocumentCardList documents={documents} isLoading={isLoading} />
+        <ul className="mt-3 grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+            {documents.map(document => (
+                <li key={document.id}>
+                    <DocumentCard document={document} deleteDocument={deleteDocument} />
+                </li>
+            ))}
+        </ul>
     </>)
 }

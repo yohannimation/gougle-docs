@@ -12,15 +12,16 @@ import {
 } from "@/components/ui/dialog"
 import { Spinner } from "@/components/ui/spinner"
 
+import type { DocumentCardInterface } from "@/interface/Document.interface";
+
 import { Eye, PenLine, Trash } from "lucide-react"
 
 interface DocumentPreviewProps {
-    id: string
-    name: string
-    isEditable: boolean
+    document: DocumentCardInterface,
+    deleteDocument: (id: string) => void
 }
 
-export default function DocumentPreviewCard({id, name, isEditable}: DocumentPreviewProps) {
+export default function DocumentPreviewCard({document, deleteDocument}: DocumentPreviewProps) {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [content, setContent] = useState<JSX.Element[]|null>(null)
 
@@ -50,13 +51,16 @@ export default function DocumentPreviewCard({id, name, isEditable}: DocumentPrev
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="w-full bg-slate-200 text-slate-700 hover:bg-slate-500 hover:text-white" onClick={(e) => searchContent(id)}>
+                <Button
+                    className="w-full bg-slate-200 text-slate-700 hover:bg-slate-500 hover:text-white"
+                    onClick={(e) => searchContent(document.id)}
+                >
                     <Eye /> Preview
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{name}</DialogTitle>
+                    <DialogTitle>{document.name}</DialogTitle>
                 </DialogHeader>
                 <div className="no-scrollbar h-[80dvh] overflow-y-auto">
                     {
@@ -70,14 +74,17 @@ export default function DocumentPreviewCard({id, name, isEditable}: DocumentPrev
                 
                 <DialogFooter className="grid grid-cols-2 gap-2">
                     {
-                        (!isLoading && isEditable) && (
+                        (!isLoading && document.isEditable) && (
                             <>
-                                <Link href={`/docs/${id}`} target="_blank">
+                                <Link href={`/docs/${document.id}`} target="_blank">
                                     <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
                                         <PenLine /> Edit
                                     </Button>
                                 </Link>
-                                <Button className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white">
+                                <Button
+                                    className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white"
+                                    onClick={(e) => deleteDocument(document.id)}
+                                >
                                     <Trash /> Delete
                                 </Button>
                             </>

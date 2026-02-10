@@ -7,24 +7,25 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import DocumentPreviewCard from "../DocumentPreviewCard/DocumentPreviewCard";
+import DocumentPreviewCard from "@/components/DocumentPreviewCard/DocumentPreviewCard";
 
-import type { DocumentCardInterface } from "../../interface/Document.interface";
+import type { DocumentCardInterface } from "@/interface/Document.interface";
 
 import { PenLine, Trash } from "lucide-react"
 
 interface DocumentCardProps {
-    document: DocumentCardInterface
+    document: DocumentCardInterface,
+    deleteDocument: (id: string) => void
 }
 
-export default function DocumentCard({document}: DocumentCardProps) {
+export default function DocumentCard({document, deleteDocument}: DocumentCardProps) {
     return (
         <Card className="relative mx-auto w-full max-w-sm gap-3">
             <CardHeader>
                 <CardTitle>{document.name}</CardTitle>
             </CardHeader>
             <CardFooter className="grid grid-cols-3 gap-2">
-                <DocumentPreviewCard id={document.id} name={document.name} isEditable={document.isEditable} />
+                <DocumentPreviewCard document={document} deleteDocument={deleteDocument} />
                 {
                     document.isEditable && (
                         <>
@@ -33,7 +34,10 @@ export default function DocumentCard({document}: DocumentCardProps) {
                                     <PenLine /> Edit
                                 </Button>
                             </Link>
-                            <Button className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white">
+                            <Button
+                                className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white"
+                                onClick={(e) => deleteDocument(document.id)}
+                            >
                                 <Trash /> Delete
                             </Button>
                         </>
