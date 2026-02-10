@@ -17,9 +17,9 @@ services:
       dockerfile: Dockerfile
     container_name: gougle-docs-backend
     environment:
-      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      DB_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
       PORT: 3001
-      FRONTEND_URL: http://localhost:3000
+      FRONT_URL: http://localhost:3000
       NODE_ENV: development
     ports:
       - "3001:3001"
