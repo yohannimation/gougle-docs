@@ -25,7 +25,7 @@ export default function DocumentCard({document, deleteDocument}: DocumentCardPro
                 <CardTitle>{document.name}</CardTitle>
             </CardHeader>
             <CardFooter className="grid grid-cols-3 gap-2">
-                <DocumentPreviewCard document={document} deleteDocument={deleteDocument} />
+                <DocumentPreviewCard id={document.id} name={document.name} deleteDocument={deleteDocument} />
                 {
                     document.isEditable && (
                         <>
