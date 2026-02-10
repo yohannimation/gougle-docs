@@ -7,7 +7,7 @@ import { useEditor, EditorContent, useEditorState } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import TextAlign from '@tiptap/extension-text-align'
-import { Spinner } from '@/components/ui/spinner'
+import Loader from '@/components/Loader/Loader'
 
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu'
 
@@ -94,10 +94,7 @@ export default function DocsEditor() {
     // Loading state
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-                <Spinner className="size-8" />
-                <p className="text-sm text-gray-500">Loading...</p>
-            </div>
+            <Loader />
         )
     }
 

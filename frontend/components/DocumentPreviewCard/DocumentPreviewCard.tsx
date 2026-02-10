@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Spinner } from "@/components/ui/spinner"
+import Loader from "../Loader/Loader";
 
 import { Eye, PenLine, Trash } from "lucide-react"
 
@@ -34,7 +34,7 @@ export default function DocumentPreviewCard({id, name, deleteDocument}: Document
                     { document.content }
                 </div>
             ) : (
-                <Spinner className="m-auto mt-20 size-8" />
+                <Loader />
             )
         }
                 
