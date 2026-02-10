@@ -73,6 +73,6 @@ To stop the project containers : ```docker compose down```
 ### Prisma migration
 
 The compose will generate the prisma TypeScript.<br/>
-To generate the table we must execute a migration : ```docker-compose exec backend npx prisma db push```
+To generate the table we must execute a migration : ```docker compose exec backend npx prisma db push```
 
 ## 
