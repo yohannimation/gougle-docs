@@ -10,7 +10,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import Loader from "../Loader/Loader";
+import { DeleteButton } from "@/components/DeleteButton/DeleteButton";
+import Loader from "@/components/Loader/Loader";
 
 import { Eye, PenLine, Trash } from "lucide-react"
 
@@ -47,12 +48,7 @@ export default function DocumentPreviewCard({id, name, deleteDocument}: Document
                                 <PenLine /> Edit
                             </Button>
                         </Link>
-                        <Button
-                            className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white"
-                            onClick={(e) => deleteDocument(document.id)}
-                        >
-                            <Trash /> Delete
-                        </Button>
+                        <DeleteButton id={document.id} deleteDocument={deleteDocument} />
                     </>
                 )
             }
