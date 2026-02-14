@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useDocument } from '@/hooks/useDocument';
 
 import { useParams } from 'next/navigation';
 
@@ -13,10 +14,9 @@ import Loader from '@/components/Loader/Loader';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 export default function DocsEditor() {
-    const { docId } = useParams();
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { docId } = useParams<{ docId: string }>()
+    const { document, isLoading, error, fetchDocument } = useDocument(docId);
     const [isEditable, setIsEditable] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
 
     const editor: Editor | null = useEditor({
         content: '',
@@ -62,40 +62,25 @@ export default function DocsEditor() {
 
     // Asynchronous fetch data
     useEffect(() => {
-        const fetchDocument = async () => {
-            try {
-                setIsEditable(false);
-                setIsLoading(true);
-                setError(null);
+        fetchDocument()
+    }, [fetchDocument])
 
-                // Emulate fetch
-                await new Promise((resolve) => setTimeout(resolve, 500));
-                const content = '<p>My content loaded!</p>';
+    // Document initialization
+    useEffect(() => {
+        if (!editor || !document || isLoading) return;
 
-                // Editor update
-                if (editor) {
-                    editor.commands.setContent(content);
-                    editor.setEditable(true);
-                }
-            } catch (err) {
-                setError(
-                    err instanceof Error
-                        ? err.message
-                        : 'Erreur lors du chargement'
-                );
-            } finally {
-                setIsEditable(true);
-                setIsLoading(false);
-            }
-        };
-
-        if (editor) {
-            fetchDocument();
+        try {
+            const content = document.content || '<p></p>';
+            editor.commands.setContent(content);
+            editor.setEditable(document.isEditable);
+            editor.commands.focus();
+        } catch (err) {
+            console.error('Error loading document:', err);
         }
-    }, [docId, editor]);
+    }, [editor, document, isLoading]);
 
     // Loading state
-    if (isLoading) {
+    if (isLoading && !document) {
         return <Loader />;
     }
 
@@ -119,11 +104,11 @@ export default function DocsEditor() {
 
     return (
         <>
-            <h1 className="mb-5">editor {docId}</h1>
+            <h1 className="mb-5">{document?.name}</h1>
             <div className="flex flex-col gap-3">
                 {editor && (
                     <>
-                        <TipTapMenu editor={editor} editable={isEditable} />
+                        <TipTapMenu editor={editor} editable={document?.isEditable || false} />
                         <EditorContent editor={editor} />
                     </>
                 )}
