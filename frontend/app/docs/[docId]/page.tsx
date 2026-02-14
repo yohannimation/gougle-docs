@@ -61,11 +61,6 @@ export default function DocsEditor() {
         },
     });
 
-    // Asynchronous fetch data
-    useEffect(() => {
-        fetchDocument();
-    }, [fetchDocument]);
-
     // Document initialization
     useEffect(() => {
         if (!editor || !document || isLoading) return;

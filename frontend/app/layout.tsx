@@ -4,6 +4,7 @@ import './globals.css';
 
 import Header from '@/components/Header/Header';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -35,6 +36,12 @@ export default function RootLayout({
                     <main className="py-6 px-10 container mx-auto flex-1">
                         {children}
                     </main>
+                    <Toaster
+                        position="top-center"
+                        richColors
+                        expand={false}
+                        duration={8000}
+                    />
                 </TooltipProvider>
             </body>
         </html>

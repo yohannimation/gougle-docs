@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useToast } from './useToast';
+
 import {
     documentsApi,
     Document,
@@ -11,6 +13,7 @@ export function useDocument(id: string) {
     const [document, setDocument] = useState<Document | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const toast = useToast();
 
     const fetchDocument = useCallback(async () => {
         if (!id) return;
@@ -24,6 +27,7 @@ export function useDocument(id: string) {
             setError(
                 err instanceof Error ? err.message : 'Failed to fetch document'
             );
+            toast.error('Failed to fetch document');
         } finally {
             setIsLoading(false);
         }
@@ -38,6 +42,7 @@ export function useDocument(id: string) {
             setError(
                 err instanceof Error ? err.message : 'Failed to update document'
             );
+            toast.error('Failed to update document');
             throw err;
         }
     };
