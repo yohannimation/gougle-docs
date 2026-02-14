@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { useDocument } from "@/hooks/useDocument";
+import Link from 'next/link';
+import { useDocument } from '@/hooks/useDocument';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -9,52 +9,58 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-import { DeleteButton } from "@/components/DeleteButton/DeleteButton";
-import Loader from "@/components/Loader/Loader";
+} from '@/components/ui/dialog';
 
-import { Eye, PenLine, Trash } from "lucide-react"
+import DeleteButton from '@/components/DeleteButton/DeleteButton';
+import Loader from '@/components/Loader/Loader';
+
+import { Eye, PenLine } from 'lucide-react';
 
 interface DocumentPreviewProps {
-    id: string,
-    name: string,
-    deleteDocument: (id: string) => void
+    id: string;
+    name: string;
+    deleteDocument: (id: string) => void;
 }
 
-export default function DocumentPreviewCard({id, name, deleteDocument}: DocumentPreviewProps) {
-    const { document, isLoading, error, fetchDocument } = useDocument(id)
+export default function DocumentPreviewCard({
+    id,
+    name,
+    deleteDocument,
+}: DocumentPreviewProps) {
+    const { document, isLoading, error, fetchDocument } = useDocument(id);
 
-    const dialogContent = <>
-        <DialogHeader>
-            <DialogTitle>{name}</DialogTitle>
-        </DialogHeader>
+    const dialogContent = (
+        <>
+            <DialogHeader>
+                <DialogTitle>{name}</DialogTitle>
+            </DialogHeader>
 
-        {
-            !isLoading && document ? (
+            {!isLoading && document ? (
                 <div className="no-scrollbar h-[80dvh] overflow-y-auto">
-                    { document.content }
+                    {document.content}
                 </div>
             ) : (
                 <Loader />
-            )
-        }
-                
-        <DialogFooter className="grid grid-cols-2 gap-2">
-            {
-                (!isLoading && document && document.isEditable) && (
+            )}
+
+            <DialogFooter className="grid grid-cols-2 gap-2">
+                {!isLoading && document && document.isEditable && (
                     <>
                         <Link href={`/docs/${document.id}`} target="_blank">
                             <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
                                 <PenLine /> Edit
                             </Button>
                         </Link>
-                        <DeleteButton id={document.id} deleteDocument={deleteDocument} />
+                        <DeleteButton
+                            id={document.id}
+                            deleteDocument={deleteDocument}
+                        />
                     </>
-                )
-            }
-        </DialogFooter>
-    </>
-    
+                )}
+            </DialogFooter>
+        </>
+    );
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -65,9 +71,7 @@ export default function DocumentPreviewCard({id, name, deleteDocument}: Document
                     <Eye /> Preview
                 </Button>
             </DialogTrigger>
-            <DialogContent>
-                { dialogContent }
-            </DialogContent>
+            <DialogContent>{dialogContent}</DialogContent>
         </Dialog>
     );
 }

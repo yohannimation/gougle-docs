@@ -1,7 +1,7 @@
 export interface DocumentCardInterface {
-    id: string,
-    name: string,
-    isEditable: boolean
+    id: string;
+    name: string;
+    isEditable: boolean;
 }
 
-export type DocumentCardListInterface = DocumentCardInterface[]
+export type DocumentCardListInterface = DocumentCardInterface[];
