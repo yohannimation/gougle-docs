@@ -17,7 +17,7 @@ export default function Header() {
                     className="flex items-center gap-2"
                     title="New document"
                 >
-                    <Button className="bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white">
+                    <Button variant="default">
                         <File /> Documents
                     </Button>
                 </Link>

@@ -28,59 +28,53 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
         <div className="flex gap-3">
             <ButtonGroup>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive('heading', { level: 1 })
+                            ? 'default'
+                            : 'outline'
+                    }
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().toggleHeading({ level: 1 }).run()
-                    }
-                    className={
-                        editor.isActive('heading', { level: 1 })
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
                     }
                     disabled={!editable}
                 >
                     Titre 1
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive('heading', { level: 2 })
+                            ? 'default'
+                            : 'outline'
+                    }
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().toggleHeading({ level: 2 }).run()
-                    }
-                    className={
-                        editor.isActive('heading', { level: 2 })
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
                     }
                     disabled={!editable}
                 >
                     Titre 2
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive('heading', { level: 3 })
+                            ? 'default'
+                            : 'outline'
+                    }
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().toggleHeading({ level: 3 }).run()
-                    }
-                    className={
-                        editor.isActive('heading', { level: 3 })
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
                     }
                     disabled={!editable}
                 >
                     Titre 3
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive('paragraph') ? 'default' : 'outline'
+                    }
                     size="sm"
                     onClick={() => editor.chain().focus().setParagraph().run()}
-                    className={
-                        editor.isActive('paragraph')
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
-                    }
                     disabled={!editable}
                 >
                     Paragraph
@@ -89,40 +83,25 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
 
             <ButtonGroup>
                 <Button
-                    variant="outline"
+                    variant={editor.isActive('bold') ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => editor.chain().focus().toggleBold().run()}
-                    className={
-                        editor.isActive('bold')
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
-                    }
                     disabled={!editable}
                 >
                     <Bold /> Bold
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={editor.isActive('italic') ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => editor.chain().focus().toggleItalic().run()}
-                    className={
-                        editor.isActive('italic')
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
-                    }
                     disabled={!editable}
                 >
                     <Italic /> Italic
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={editor.isActive('strike') ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => editor.chain().focus().toggleStrike().run()}
-                    className={
-                        editor.isActive('strike')
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
-                    }
                     disabled={!editable}
                 >
                     <Strikethrough /> Strike
@@ -130,14 +109,9 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
             </ButtonGroup>
 
             <Button
-                variant="outline"
+                variant={editor.isActive('highlight') ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => editor.chain().focus().toggleHighlight().run()}
-                className={
-                    editor.isActive('highlight')
-                        ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                        : ''
-                }
                 disabled={!editable}
             >
                 <Highlighter /> Highlight
@@ -145,60 +119,56 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
 
             <ButtonGroup>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive({ textAlign: 'left' })
+                            ? 'default'
+                            : 'outline'
+                    }
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().setTextAlign('left').run()
-                    }
-                    className={
-                        editor.isActive({ textAlign: 'left' })
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
                     }
                     disabled={!editable}
                 >
                     <TextAlignStart /> Left
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive({ textAlign: 'center' })
+                            ? 'default'
+                            : 'outline'
+                    }
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().setTextAlign('center').run()
-                    }
-                    className={
-                        editor.isActive({ textAlign: 'center' })
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
                     }
                     disabled={!editable}
                 >
                     <TextAlignCenter /> Center
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive({ textAlign: 'right' })
+                            ? 'default'
+                            : 'outline'
+                    }
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().setTextAlign('right').run()
-                    }
-                    className={
-                        editor.isActive({ textAlign: 'right' })
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
                     }
                     disabled={!editable}
                 >
                     <TextAlignEnd /> Right
                 </Button>
                 <Button
-                    variant="outline"
+                    variant={
+                        editor.isActive({ textAlign: 'justify' })
+                            ? 'default'
+                            : 'outline'
+                    }
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().setTextAlign('justify').run()
-                    }
-                    className={
-                        editor.isActive({ textAlign: 'justify' })
-                            ? 'bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white'
-                            : ''
                     }
                     disabled={!editable}
                 >

@@ -10,13 +10,14 @@ import Highlight from '@tiptap/extension-highlight';
 import TextAlign from '@tiptap/extension-text-align';
 import { Editor } from '@tiptap/react';
 
+import { Button } from '@/components/ui/button';
+
 import Loader from '@/components/Loader/Loader';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 export default function DocsEditor() {
-    const { docId } = useParams<{ docId: string }>()
+    const { docId } = useParams<{ docId: string }>();
     const { document, isLoading, error, fetchDocument } = useDocument(docId);
-    const [isEditable, setIsEditable] = useState<boolean>(false);
 
     const editor: Editor | null = useEditor({
         content: '',
@@ -62,8 +63,8 @@ export default function DocsEditor() {
 
     // Asynchronous fetch data
     useEffect(() => {
-        fetchDocument()
-    }, [fetchDocument])
+        fetchDocument();
+    }, [fetchDocument]);
 
     // Document initialization
     useEffect(() => {
@@ -92,12 +93,12 @@ export default function DocsEditor() {
                     <p className="font-semibold">Error</p>
                     <p className="text-sm">{error}</p>
                 </div>
-                <button
+                <Button
+                    variant="default"
                     onClick={() => window.location.reload()}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                 >
                     Try again
-                </button>
+                </Button>
             </div>
         );
     }
@@ -108,7 +109,10 @@ export default function DocsEditor() {
             <div className="flex flex-col gap-3">
                 {editor && (
                     <>
-                        <TipTapMenu editor={editor} editable={document?.isEditable || false} />
+                        <TipTapMenu
+                            editor={editor}
+                            editable={document?.isEditable || false}
+                        />
                         <EditorContent editor={editor} />
                     </>
                 )}

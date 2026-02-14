@@ -20,7 +20,7 @@ export default function DeleteButton({
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white">
+                <Button variant="destructive" className="w-full">
                     <Trash /> Delete
                 </Button>
             </PopoverTrigger>
@@ -29,7 +29,8 @@ export default function DeleteButton({
                     Are you sure you want to delete this document ?
                 </PopoverTitle>
                 <Button
-                    className="w-full bg-red-200 text-red-700 hover:bg-red-500 hover:text-white font-semibold"
+                    variant="destructive"
+                    className="font-semibold"
                     onClick={(e) => deleteDocument(id)}
                 >
                     <CircleAlert /> Permanently delete
