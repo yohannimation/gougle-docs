@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "path": "./backend",
+      "name": "gougle-docs-backend"
+    },
+    {
+      "path": "./frontend",
+      "name": "gougle-docs-frontend"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true
+  }
+}
