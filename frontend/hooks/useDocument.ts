@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useToast } from './useToast';
 
 import {
@@ -9,7 +9,7 @@ import {
     DocumentUpdateInput,
 } from '@/lib/api/documents';
 
-export function useDocument(id: string) {
+export function useDocument(id: string, fetch?: boolean) {
     const [document, setDocument] = useState<Document | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -46,6 +46,12 @@ export function useDocument(id: string) {
             throw err;
         }
     };
+
+    useEffect(() => {
+        if (fetch) {
+            fetchDocument();
+        }
+    }, []);
 
     return {
         document,

@@ -17,7 +17,7 @@ import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
-    const { document, isLoading, error, fetchDocument } = useDocument(docId);
+    const { document, isLoading, error } = useDocument(docId, true);
 
     const editor: Editor | null = useEditor({
         content: '',
