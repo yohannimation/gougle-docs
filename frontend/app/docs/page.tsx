@@ -5,6 +5,12 @@ import * as Yup from 'yup';
 
 import { Button } from '@/components/ui/button';
 import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import {
     Dialog,
     DialogContent,
     DialogFooter,
@@ -67,19 +73,31 @@ export default function Docs() {
 
     return (
         <div className="relative h-full">
-            <h1>Docs</h1>
-            <ul className="mt-3 grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
-                {isLoading
-                    ? skeletons
-                    : documents.map((document) => (
-                          <li key={document.id}>
-                              <DocumentCard
-                                  document={document}
-                                  deleteDocument={deleteDocument}
-                              />
-                          </li>
-                      ))}
-            </ul>
+            <ContextMenu>
+                <ContextMenuTrigger className="block h-full">
+                    <h1>Docs</h1>
+                    <ul className="mt-3 grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+                        {isLoading
+                            ? skeletons
+                            : documents.map((document) => (
+                                  <li key={document.id}>
+                                      <DocumentCard
+                                          document={document}
+                                          deleteDocument={deleteDocument}
+                                      />
+                                  </li>
+                              ))}
+                    </ul>
+
+                    <ContextMenuContent>
+                        <ContextMenuItem
+                            onClick={(e) => setCreationDialogOpen(true)}
+                        >
+                            Create new document
+                        </ContextMenuItem>
+                    </ContextMenuContent>
+                </ContextMenuTrigger>
+            </ContextMenu>
 
             {/* Create document part */}
             <Dialog
@@ -110,7 +128,7 @@ export default function Docs() {
                     </DialogHeader>
                     <FormDocumentCreation formik={formik} />
                     <DialogFooter>
-                        <Button onClick={(e) => formik.handleSubmit}>
+                        <Button onClick={() => formik.handleSubmit}>
                             <Plus /> Create
                         </Button>
                     </DialogFooter>
