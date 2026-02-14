@@ -20,6 +20,7 @@ export default function FormDocumentCreation({
                     name="name"
                     type="text"
                     placeholder="New document"
+                    autoComplete="off"
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     aria-invalid={!!formik.errors.name || undefined}
