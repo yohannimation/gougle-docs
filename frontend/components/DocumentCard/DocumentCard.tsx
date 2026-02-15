@@ -43,7 +43,9 @@ export default function DocumentCard({
     return (
         <Card className="relative mx-auto w-full max-w-sm gap-3">
             <CardHeader>
-                <CardTitle>{document.name}</CardTitle>
+                <CardTitle className="overflow-hidden text-ellipsis">
+                    {document.name}
+                </CardTitle>
             </CardHeader>
             <CardFooter className="grid grid-cols-3 gap-2">
                 {cardFooter}
