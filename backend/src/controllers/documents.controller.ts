@@ -36,7 +36,34 @@ export class DocumentController {
 
     async create(req: Request, res: Response, next: NextFunction) {
         try {
-            const document = await documentService.create(req.body);
+            let { name, isEditable, content } = req.body;
+
+            // Name verification
+            if (name !== undefined) {
+                if (typeof name !== 'string') {
+                    return res.status(400).json({
+                        error: true,
+                        message: 'Name must be a string',
+                    });
+                }
+                if (name.trim().length < 2 || name.trim().length > 32) {
+                    return res.status(400).json({
+                        error: true,
+                        message:
+                            'Name length must be between 2 and 32 characters',
+                    });
+                }
+            }
+
+            // Set document default value
+            isEditable = true;
+            content = '';
+
+            const document = await documentService.create({
+                name: name?.trim(),
+                isEditable,
+                content,
+            });
             res.status(201).json({ data: document });
         } catch (error) {
             next(error);
@@ -50,8 +77,47 @@ export class DocumentController {
     ) {
         try {
             const { id } = req.params;
-            const document = await documentService.update(id, req.body);
-            res.json({ data: document });
+            const { name, isEditable, content } = req.body;
+
+            // Name verification
+            if (name !== undefined) {
+                if (typeof name !== 'string') {
+                    return res.status(400).json({
+                        error: true,
+                        message: 'Name must be a string',
+                    });
+                }
+                if (name.trim().length < 2 || name.trim().length > 32) {
+                    return res.status(400).json({
+                        error: true,
+                        message:
+                            'Name length must be between 2 and 32 characters',
+                    });
+                }
+            }
+
+            // Field verification
+            if (
+                name === undefined &&
+                isEditable === undefined &&
+                content === undefined
+            ) {
+                return res.status(400).json({
+                    error: true,
+                    message: 'At least one field must be provided for update',
+                });
+            }
+
+            const document = await documentService.update(id, {
+                name: name?.trim(),
+                isEditable,
+                content,
+            });
+
+            res.json({
+                success: true,
+                data: document,
+            });
         } catch (error) {
             next(error);
         }
