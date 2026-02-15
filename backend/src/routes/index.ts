@@ -1,18 +1,18 @@
-import { Router } from 'express'
-import documentRoutes from './documents.routes'
+import { Router } from 'express';
+import documentRoutes from './documents.routes';
 
-const router = Router()
+const router = Router();
 
 // Health check
 router.get('/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  })
-})
+    res.json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+    });
+});
 
 // Routes API
-router.use('/documents', documentRoutes)
+router.use('/documents', documentRoutes);
 
-export default router
+export default router;

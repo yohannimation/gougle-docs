@@ -1,5 +1,8 @@
-import prisma from '../config/database'
-import { DocumentCreateInput, DocumentUpdateInput } from '../types/document.types'
+import prisma from '../config/database';
+import {
+    DocumentCreateInput,
+    DocumentUpdateInput,
+} from '../types/document.types';
 
 export class DocumentService {
     async findAll() {
@@ -12,13 +15,13 @@ export class DocumentService {
                 createdAt: true,
                 updatedAt: true,
             },
-        })
+        });
     }
 
     async findById(id: string) {
         return prisma.document.findUnique({
             where: { id },
-        })
+        });
     }
 
     async create(data: DocumentCreateInput) {
@@ -28,21 +31,21 @@ export class DocumentService {
                 isEditable: data.isEditable ?? true,
                 content: data.content || null,
             },
-        })
+        });
     }
 
     async update(id: string, data: DocumentUpdateInput) {
         return prisma.document.update({
             where: { id },
             data,
-        })
+        });
     }
 
     async delete(id: string) {
         return prisma.document.delete({
             where: { id },
-        })
+        });
     }
 }
 
-export default new DocumentService()
+export default new DocumentService();
