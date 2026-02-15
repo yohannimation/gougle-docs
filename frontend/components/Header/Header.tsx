@@ -7,7 +7,7 @@ import { EarthIcon, Github, File } from 'lucide-react';
 
 export default function Header() {
     return (
-        <header className="flex justify-between items-center py-4 px-10 border-b-1">
+        <header className="sticky top-0 z-10 backdrop-blur-xl backdrop-grayscale-50 flex justify-between items-center py-4 px-10 border-b-1">
             <Link href="/" title="Home page">
                 Gougle doc
             </Link>
@@ -18,7 +18,8 @@ export default function Header() {
                     title="New document"
                 >
                     <Button variant="default">
-                        <File /> Documents
+                        <File />{' '}
+                        <span className="hidden sm:inline">Documents</span>
                     </Button>
                 </Link>
 
