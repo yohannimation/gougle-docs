@@ -21,7 +21,7 @@ export default function DocumentsList({
     ));
 
     return (
-        <ul className="mt-3 grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+        <ul className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
             {isLoading
                 ? skeletons
                 : documents.map((document) => (

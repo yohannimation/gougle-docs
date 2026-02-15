@@ -33,7 +33,7 @@ export default function RootLayout({
             >
                 <TooltipProvider>
                     <Header />
-                    <main className="py-6 px-10 container mx-auto flex-1">
+                    <main className="py-6 px-10 container mx-auto flex-1 min-h-0 overflow-hidden">
                         {children}
                     </main>
                     <Toaster

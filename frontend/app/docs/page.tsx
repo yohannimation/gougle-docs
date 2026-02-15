@@ -9,6 +9,7 @@ import {
     ContextMenuItem,
     ContextMenuTrigger,
 } from '@/components/ui/context-menu';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import DocumentCreationDialog from '@/components/DocumentCreationDialog/DocumentCreationDialog';
 import DocumentsList from '@/components/DocumentsList/DocumentsList';
@@ -26,13 +27,15 @@ export default function Docs() {
     return (
         <div className="relative h-full">
             <ContextMenu>
-                <ContextMenuTrigger className="block h-full">
+                <ContextMenuTrigger className="flex flex-col h-full">
                     <h1>Docs</h1>
-                    <DocumentsList
-                        documents={documents}
-                        isLoading={isLoading}
-                        deleteDocument={deleteDocument}
-                    />
+                    <ScrollArea className="mt-3 flex-1 min-h-0">
+                        <DocumentsList
+                            documents={documents}
+                            isLoading={isLoading}
+                            deleteDocument={deleteDocument}
+                        />
+                    </ScrollArea>
                 </ContextMenuTrigger>
 
                 <ContextMenuContent>
