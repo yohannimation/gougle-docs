@@ -36,7 +36,7 @@ export default function DocumentPreviewCard({
             </DialogHeader>
 
             {!isLoading && document ? (
-                <div className="no-scrollbar h-[80dvh] overflow-y-auto">
+                <div className="no-scrollbar h-[70dvh] overflow-y-auto">
                     {document.content}
                 </div>
             ) : (
