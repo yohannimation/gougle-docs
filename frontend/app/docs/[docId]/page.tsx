@@ -1,13 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDocument } from '@/hooks/useDocument';
-
 import { useParams } from 'next/navigation';
+import { useTiptapCollaboration } from '@/hooks/useTiptapCollaboration';
 
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Highlight from '@tiptap/extension-highlight';
 import TextAlign from '@tiptap/extension-text-align';
+import Collaboration from '@tiptap/extension-collaboration';
 import { Editor } from '@tiptap/react';
 
 import { Button } from '@/components/ui/button';
@@ -15,29 +16,84 @@ import { Button } from '@/components/ui/button';
 import Loader from '@/components/Loader/Loader';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
+
+/** Icône de statut de connexion affichée dans l'UI */
+function ConnectionBadge({
+    status,
+}: {
+    status: 'connecting' | 'connected' | 'disconnected' | 'error';
+}) {
+    const config = {
+        connecting: { color: 'bg-yellow-400', label: 'Connexion…' },
+        connected: { color: 'bg-green-500', label: 'Connecté' },
+        disconnected: { color: 'bg-gray-400', label: 'Déconnecté' },
+        error: { color: 'bg-red-500', label: 'Erreur' },
+    };
+    const { color, label } = config[status];
+
+    return (
+        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className={`inline-block h-2 w-2 rounded-full ${color}`} />
+            {label}
+        </span>
+    );
+}
+
 export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
+
+    // Chargement des métadonnées du document (nom, droits, etc.)
     const { document, isLoading, error } = useDocument(docId, true);
 
-    const editor: Editor | null = useEditor({
-        content: '',
-        editable: false,
-        extensions: [
-            StarterKit,
-            Highlight,
-            TextAlign.configure({
-                types: ['heading', 'paragraph'],
-            }),
-        ],
-        immediatelyRender: false,
-        autofocus: true,
-        injectCSS: false,
-        editorProps: {
-            attributes: {
-                class: 'min-h-[156px] border rounded-md bg-slate-50 py-2 px-3',
+    // userName stable pour éviter les reconnexions
+    const userName = useMemo(
+        () => 'User ' + Math.floor(Math.random() * 1000),
+        []
+    );
+
+    // ── Collaboration Socket.io + Y.js ─────────────────────────────────────────
+    const { ydoc, connectionStatus, isSynced } = useTiptapCollaboration({
+        docId,
+        socketUrl: SOCKET_URL,
+        userName,
+    });
+
+    // ── Éditeur Tiptap ────────────────────────────────────────────────────────
+    // N'initialiser l'éditeur QUE quand le ydoc est synchronisé
+    const editor: Editor | null = useEditor(
+        {
+            editable: false,
+            extensions: [
+                StarterKit.configure({ history: false }),
+                Highlight,
+                TextAlign.configure({ types: ['heading', 'paragraph'] }),
+
+                ...(ydoc && isSynced
+                    ? [
+                          Collaboration.configure({
+                              document: ydoc,
+                          }),
+                      ]
+                    : []),
+            ],
+            immediatelyRender: false,
+            autofocus: true,
+            injectCSS: false,
+            editorProps: {
+                attributes: {
+                    class: 'min-h-[156px] border rounded-md bg-slate-50 py-2 px-3',
+                },
             },
         },
-    });
+        [ydoc, isSynced] // Recréer l'éditeur quand isSynced passe à true
+    );
+
+    // ── Mise à jour des droits d'édition ──────────────────────────────────────
+    useEffect(() => {
+        if (!editor || isLoading) return;
+        editor.setEditable(document?.isEditable ?? false);
+    }, [editor, document?.isEditable, isLoading]);
 
     const editorState = useEditorState({
         editor,
@@ -61,38 +117,22 @@ export default function DocsEditor() {
         },
     });
 
-    // Document initialization
-    useEffect(() => {
-        if (!editor || !document || isLoading) return;
-
-        try {
-            const content = document.content || '<p></p>';
-            editor.commands.setContent(content);
-            editor.setEditable(document.isEditable);
-            editor.commands.focus();
-        } catch (err) {
-            console.error('Error loading document:', err);
-        }
-    }, [editor, document, isLoading]);
-
-    // Loading state
     if (isLoading && !document) {
         return <Loader />;
     }
 
-    // Error state
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
                 <div className="text-red-500 text-center">
-                    <p className="font-semibold">Error</p>
+                    <p className="font-semibold">Erreur</p>
                     <p className="text-sm">{error}</p>
                 </div>
                 <Button
                     variant="default"
                     onClick={() => window.location.reload()}
                 >
-                    Try again
+                    Réessayer
                 </Button>
             </div>
         );
@@ -100,7 +140,17 @@ export default function DocsEditor() {
 
     return (
         <>
-            <h1 className="mb-5">{document?.name}</h1>
+            <div className="flex items-center justify-between mb-5">
+                <h1 className="mb-5">{document?.name}</h1>
+                <div className="flex items-center gap-3">
+                    {/* {isSaving && (
+                        <span className="text-xs text-muted-foreground animate-pulse">
+                            Sauvegarde…
+                        </span>
+                    )} */}
+                    <ConnectionBadge status={connectionStatus} />
+                </div>
+            </div>
             <div className="flex flex-col gap-3">
                 {editor && (
                     <>

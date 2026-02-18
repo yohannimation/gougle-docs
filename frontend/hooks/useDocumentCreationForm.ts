@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
     name: Yup.string()
+        .trim()
         .min(2, 'Must have min 2 characters')
         .max(32, 'Must have max 32 characters')
         .required('Document name is required'),
