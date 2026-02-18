@@ -18,6 +18,7 @@ model Document {
   name       String   @db.VarChar(255)
   isEditable Boolean  @default(true)
   content    Json?
+  ydoc       Bytes?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
