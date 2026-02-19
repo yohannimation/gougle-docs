@@ -1,4 +1,3 @@
-// src/services/documents.service.ts
 import prisma from '../config/database';
 import {
     DocumentCreateInput,
@@ -25,6 +24,20 @@ export class DocumentService {
         });
     }
 
+    /**
+     * Load Y.js binary of a document
+     *
+     * @param id string
+     * @returns promise
+     */
+    async loadYDoc(id: string): Promise<Buffer | null> {
+        const doc = await prisma.document.findUnique({
+            where: { id },
+            select: { ydoc: true },
+        });
+        return (doc?.ydoc ?? null) as any;
+    }
+
     async create(data: DocumentCreateInput) {
         return prisma.document.create({
             data: {
@@ -42,28 +55,23 @@ export class DocumentService {
         });
     }
 
-    async delete(id: string) {
-        return prisma.document.delete({
-            where: { id },
-        });
-    }
-
-    // ─── Méthodes Y.js (utilisées par document.handler.ts) ───────────────────
-
-    /** Charge le binaire Y.js d'un document */
-    async loadYDoc(id: string): Promise<Buffer | null> {
-        const doc = await prisma.document.findUnique({
-            where: { id },
-            select: { ydoc: true },
-        });
-        return (doc?.ydoc ?? null) as any;
-    }
-
-    /** Persiste le binaire Y.js */
+    /**
+     * Persist Y.js binary
+     *
+     * @param id string
+     * @param ydocBuffer Buffer
+     * @returns promise
+     */
     async saveYDoc(id: string, ydocBuffer: Buffer): Promise<void> {
         await prisma.document.update({
             where: { id },
             data: { ydoc: ydocBuffer as any },
+        });
+    }
+
+    async delete(id: string) {
+        return prisma.document.delete({
+            where: { id },
         });
     }
 }

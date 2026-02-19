@@ -1,13 +1,11 @@
-// src/socket/handlers/document.handler.ts
 import { Server, Socket } from 'socket.io';
 import * as Y from 'yjs';
 import documentService from '../../services/documents.service';
 
-// ─── Constantes debounce ──────────────────────────────────────────────────────
-const DEBOUNCE_MIN_MS = 1_000; // Inactivité avant persistance
-const DEBOUNCE_MAX_MS = 3_000; // Persistance forcée après ce délai
+const DEBOUNCE_MIN_MS = 1000; // Inactivity delay before persistence
+const DEBOUNCE_MAX_MS = 3000; // Persistence force after this delay
 
-// ─── État en mémoire par document ─────────────────────────────────────────────
+// Local document state
 interface DocState {
     ydoc: Y.Doc;
     clients: Set<string>;
@@ -33,14 +31,14 @@ function getOrCreateDocState(documentId: string): DocState {
     return docStates.get(documentId)!;
 }
 
-/** Persiste le Y.Doc en DB */
+/** Persist Y.Doc in database */
 async function persistDocument(
     documentId: string,
     state: DocState
 ): Promise<void> {
     if (!state.pendingSave) return;
 
-    // Annuler les timers
+    // Remove timers
     if (state.debounceTimer) {
         clearTimeout(state.debounceTimer);
         state.debounceTimer = null;
@@ -61,9 +59,9 @@ async function persistDocument(
     }
 }
 
-/** Planifie une persistance avec debounce min/max */
+/** Schedule persist with min/max debounce */
 function schedulePersist(documentId: string, state: DocState): void {
-    // Premier changement → armer le timer max
+    // First update -> prepare the max timer
     if (!state.pendingSave) {
         state.pendingSave = true;
         state.maxTimer = setTimeout(
@@ -72,7 +70,7 @@ function schedulePersist(documentId: string, state: DocState): void {
         );
     }
 
-    // Réarmer le timer min à chaque update
+    // Reset the min timer for each update
     if (state.debounceTimer) clearTimeout(state.debounceTimer);
     state.debounceTimer = setTimeout(
         () => persistDocument(documentId, state),
@@ -83,7 +81,6 @@ function schedulePersist(documentId: string, state: DocState): void {
 // ─── Handler principal ────────────────────────────────────────────────────────
 
 export function documentHandler(io: Server, socket: Socket) {
-    // ── Rejoindre un document ────────────────────────────────────────────────
     socket.on('join-document', async ({ documentId, userName, userColor }) => {
         console.log(`📄 ${socket.id} joining document ${documentId}`);
 
@@ -91,7 +88,7 @@ export function documentHandler(io: Server, socket: Socket) {
         state.clients.add(socket.id);
         socket.join(documentId);
 
-        // Charger depuis la DB si Y.Doc vide (premier client)
+        // Load the document from the database if the Y.Doc is empty
         const isEmpty = Y.encodeStateAsUpdate(state.ydoc).length <= 2;
         if (isEmpty) {
             const savedYDoc = await documentService.loadYDoc(documentId);
@@ -103,11 +100,11 @@ export function documentHandler(io: Server, socket: Socket) {
             }
         }
 
-        // Envoyer l'état Y.js courant au nouveau client
+        // Send Y.js current state to the new client
         const currentState = Y.encodeStateAsUpdate(state.ydoc);
         socket.emit('document-sync', { update: Array.from(currentState) });
 
-        // Notifier les autres clients
+        // Notify other clients
         socket.to(documentId).emit('user-joined', {
             userId: socket.id,
             userName,
@@ -115,28 +112,28 @@ export function documentHandler(io: Server, socket: Socket) {
         });
     });
 
-    // ── Recevoir et broadcaster une mise à jour Y.js ─────────────────────────
+    // ── Receive and broadcast a Y.js update ─────────────────────────
     socket.on('document-update', ({ documentId, update }) => {
         const state = docStates.get(documentId);
         if (!state) return;
 
-        // Appliquer sur le Y.Doc serveur
+        // Apply on the Y.Doc server
         const updateBuffer = new Uint8Array(update);
         Y.applyUpdate(state.ydoc, updateBuffer);
 
-        // Broadcaster aux autres clients
+        // Broadcast other clients
         socket.to(documentId).emit('document-update', { update });
 
-        // Planifier la persistance
+        // Schedule the persistence
         schedulePersist(documentId, state);
     });
 
-    // ── Quitter un document ──────────────────────────────────────────────────
+    // ── Leave a document ──────────────────────────────────────────────────
     socket.on('leave-document', async ({ documentId }) => {
         await handleLeave(documentId, socket.id);
     });
 
-    // ── Déconnexion ──────────────────────────────────────────────────────────
+    // ── Disconnection ──────────────────────────────────────────────────────────
     socket.on('disconnect', async () => {
         for (const [documentId, state] of docStates.entries()) {
             if (state.clients.has(socket.id)) {
@@ -159,7 +156,7 @@ export function documentHandler(io: Server, socket: Socket) {
             `📄 ${socketId} left "${documentId}" (${state.clients.size} remaining)`
         );
 
-        // Dernier client parti → persister et libérer
+        // Last client leaved -> persist and clear the memory
         if (state.clients.size === 0) {
             await persistDocument(documentId, state);
             docStates.delete(documentId);
