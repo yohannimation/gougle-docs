@@ -13,32 +13,11 @@ import { Editor } from '@tiptap/react';
 
 import { Button } from '@/components/ui/button';
 
+import ConnectionBadge from '@/components/ConnectionBadge/ConnectionBadge';
 import Loader from '@/components/Loader/Loader';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
-
-/** Icône de statut de connexion affichée dans l'UI */
-function ConnectionBadge({
-    status,
-}: {
-    status: 'connecting' | 'connected' | 'disconnected' | 'error';
-}) {
-    const config = {
-        connecting: { color: 'bg-yellow-400', label: 'Connexion…' },
-        connected: { color: 'bg-green-500', label: 'Connecté' },
-        disconnected: { color: 'bg-gray-400', label: 'Déconnecté' },
-        error: { color: 'bg-red-500', label: 'Erreur' },
-    };
-    const { color, label } = config[status];
-
-    return (
-        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className={`inline-block h-2 w-2 rounded-full ${color}`} />
-            {label}
-        </span>
-    );
-}
 
 export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
