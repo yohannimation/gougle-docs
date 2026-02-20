@@ -1,4 +1,3 @@
-// hooks/useTiptapCollaboration.ts
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import * as Y from 'yjs';
@@ -10,35 +9,27 @@ export type ConnectionStatus =
     | 'error';
 
 interface UseTiptapCollaborationOptions {
-    /** ID du document à synchroniser */
+    /** Document ID to synchronize */
     docId: string;
-    /** URL du serveur Socket.io, ex: http://localhost:3001 */
+    /** Socket.io server URL, ex: http://localhost:3001 */
     socketUrl: string;
-    /** Nom d'utilisateur pour la collaboration */
+    /** User name for the collaboration */
     userName?: string;
-    /** Couleur du curseur (hex) */
+    /** Cursor color (hex) */
     userColor?: string;
 }
 
 interface UseTiptapCollaborationReturn {
-    /** Y.Doc partagé à passer à Collaboration.configure({ document }) */
+    /** Y.Doc shared to give at Collaboration.configure({ document }) */
     ydoc: Y.Doc | null;
-    /** État de la connexion Socket.io */
+    /** Socket.io state */
     connectionStatus: ConnectionStatus;
-    /** Socket.io instance (pour awareness si besoin) */
+    /** Socket.io instance (for awareness if needed) */
     socket: Socket | null;
 }
 
 /**
- * Hook gérant la connexion Socket.io et la synchro Y.js.
- *
- * Utilisation dans useEditor :
- *   const { ydoc } = useTiptapCollaboration({ docId, socketUrl });
- *
- *   extensions: [
- *     Collaboration.configure({ document: ydoc }),
- *     ...
- *   ]
+ * Hook managing the Socket.io connection and Y.js synchronization.
  */
 export function useTiptapCollaboration({
     docId,
@@ -50,28 +41,26 @@ export function useTiptapCollaboration({
         useState<ConnectionStatus>('connecting');
 
     const socketRef = useRef<Socket | null>(null);
-    // Créer le Y.Doc UNE SEULE FOIS et garder la même référence
     const ydocRef = useRef<Y.Doc>(new Y.Doc());
-    const syncedRef = useRef(false);
 
     useEffect(() => {
         if (!docId || !socketUrl) return;
 
         const ydoc = ydocRef.current;
 
-        // Connexion Socket.io
+        // Socket.io connection
         const socket = io(socketUrl, {
             transports: ['websocket'],
             reconnection: true,
         });
         socketRef.current = socket;
 
-        // ── Gestion de la connexion ──────────────────────────────────────────
+        // Connection management
         socket.on('connect', () => {
-            console.log('[Socket.io] Connecté');
+            console.log('[Socket.io] Connected');
             setConnectionStatus('connected');
 
-            // Rejoindre le document
+            // Join document
             socket.emit('join-document', {
                 documentId: docId,
                 userName,
@@ -80,36 +69,33 @@ export function useTiptapCollaboration({
         });
 
         socket.on('disconnect', () => {
-            console.log('[Socket.io] Déconnecté');
+            console.log('[Socket.io] Disconnected');
             setConnectionStatus('disconnected');
-            syncedRef.current = false;
         });
 
         socket.on('connect_error', (err) => {
-            console.error('[Socket.io] Erreur de connexion :', err);
+            console.error('[Socket.io] Connection error :', err);
             setConnectionStatus('error');
         });
 
         // ── Synchro Y.js ──────────────────────────────────────────────────────
-
-        // Recevoir l'état initial du serveur
+        // Receive the initial state from backend
         socket.on('document-sync', ({ update }) => {
-            console.log('[Y.js] Synchronisation initiale reçue');
+            console.log('[Y.js] Initial state received');
             const updateBuffer = new Uint8Array(update);
             Y.applyUpdate(ydoc, updateBuffer);
-            syncedRef.current = true;
         });
 
-        // Recevoir les mises à jour des autres clients
+        // Receive the update from other users
         socket.on('document-update', ({ update }) => {
             const updateBuffer = new Uint8Array(update);
             Y.applyUpdate(ydoc, updateBuffer);
         });
 
-        // Envoyer les mises à jour locales au serveur
+        // Send local update to the server
         const onUpdate = (update: Uint8Array, origin: any) => {
-            // Ne pas renvoyer les updates qu'on vient de recevoir
-            if (origin !== 'remote' && syncedRef.current) {
+            // Don't resend the update received
+            if (origin !== 'remote') {
                 socket.emit('document-update', {
                     documentId: docId,
                     update: Array.from(update),
@@ -118,26 +104,26 @@ export function useTiptapCollaboration({
         };
         ydoc.on('update', onUpdate);
 
-        // ── Présence (optionnel) ──────────────────────────────────────────────
+        // ── Other users ──────────────────────────────────────────────
         socket.on(
             'user-joined',
             ({ userId, userName: name, userColor: color }) => {
-                console.log(`[Présence] ${name} a rejoint le document`);
+                console.log(`[User] ${name} join the document`);
             }
         );
 
         socket.on('user-left', ({ userId }) => {
-            console.log(`[Présence] Utilisateur ${userId} a quitté`);
+            console.log(`[User] ${userId} leaved the document`);
         });
 
-        // ── Nettoyage ─────────────────────────────────────────────────────────
+        // ── Cleaning ─────────────────────────────────────────────────────────
         return () => {
             ydoc.off('update', onUpdate);
             socket.emit('leave-document', { documentId: docId });
             socket.disconnect();
             socketRef.current = null;
         };
-    }, [docId, socketUrl]); // Enlever userName et userColor des dépendances
+    }, [docId, socketUrl]);
 
     return {
         ydoc: ydocRef.current,
