@@ -27,8 +27,6 @@ interface UseTiptapCollaborationReturn {
     connectionStatus: ConnectionStatus;
     /** Socket.io instance (pour awareness si besoin) */
     socket: Socket | null;
-    /** Indique si la synchro initiale est terminée */
-    isSynced: boolean;
 }
 
 /**
@@ -50,7 +48,6 @@ export function useTiptapCollaboration({
 }: UseTiptapCollaborationOptions): UseTiptapCollaborationReturn {
     const [connectionStatus, setConnectionStatus] =
         useState<ConnectionStatus>('connecting');
-    const [isSynced, setIsSynced] = useState(false);
 
     const socketRef = useRef<Socket | null>(null);
     // Créer le Y.Doc UNE SEULE FOIS et garder la même référence
@@ -86,7 +83,6 @@ export function useTiptapCollaboration({
             console.log('[Socket.io] Déconnecté');
             setConnectionStatus('disconnected');
             syncedRef.current = false;
-            setIsSynced(false);
         });
 
         socket.on('connect_error', (err) => {
@@ -102,7 +98,6 @@ export function useTiptapCollaboration({
             const updateBuffer = new Uint8Array(update);
             Y.applyUpdate(ydoc, updateBuffer);
             syncedRef.current = true;
-            setIsSynced(true);
         });
 
         // Recevoir les mises à jour des autres clients
@@ -148,6 +143,5 @@ export function useTiptapCollaboration({
         ydoc: ydocRef.current,
         connectionStatus,
         socket: socketRef.current,
-        isSynced,
     };
 }

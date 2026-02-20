@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { Spinner } from '@/components/ui/spinner';
 
 interface ConnectionBadgeProps {
     status: 'connecting' | 'connected' | 'disconnected' | 'error';
@@ -9,7 +10,7 @@ export default function ConnectionBadge({ status }: ConnectionBadgeProps) {
         case 'connecting':
             return (
                 <Badge variant="secondary">
-                    <span className="block size-1.5 bg-slate-500 rounded-full"></span>
+                    <Spinner />
                     Connecting
                 </Badge>
             );
@@ -17,24 +18,21 @@ export default function ConnectionBadge({ status }: ConnectionBadgeProps) {
         case 'connected':
             return (
                 <Badge variant="valid">
-                    <span className="block size-1.5 bg-green-700 rounded-full"></span>
-                    Connected
+                    <span className="block size-1.75 bg-green-700 rounded-full"></span>
+                    Online
                 </Badge>
             );
 
         case 'disconnected':
-            return (
-                <Badge variant="destructive">
-                    <span className="block size-1.5 bg-red-700 rounded-full"></span>
-                    Disconnected
-                </Badge>
-            );
-
         case 'error':
             return (
-                <Badge variant="destructive">
-                    <span className="block size-1.5 bg-red-700 rounded-full"></span>
-                    Error
+                <Badge
+                    variant="destructive"
+                    className="relative overflow-visible"
+                >
+                    <Spinner className="stroke-red-700 stroke-3" />
+                    Offline
+                    <span className="absolute inset-x-2 inset-y-0 block bg-red-200 rounded-full -z-1 animate-ping"></span>
                 </Badge>
             );
     }

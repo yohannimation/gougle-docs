@@ -1,7 +1,8 @@
 'use client';
+
 import { useEffect, useMemo } from 'react';
-import { useDocument } from '@/hooks/useDocument';
 import { useParams } from 'next/navigation';
+import { useDocument } from '@/hooks/useDocument';
 import { useTiptapCollaboration } from '@/hooks/useTiptapCollaboration';
 
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
@@ -22,24 +23,23 @@ const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
 export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
 
-    // Chargement des métadonnées du document (nom, droits, etc.)
+    // Loading document data (name, content, etc.)
     const { document, isLoading, error } = useDocument(docId, true);
 
-    // userName stable pour éviter les reconnexions
     const userName = useMemo(
         () => 'User ' + Math.floor(Math.random() * 1000),
         []
     );
 
-    // ── Collaboration Socket.io + Y.js ─────────────────────────────────────────
-    const { ydoc, connectionStatus, isSynced } = useTiptapCollaboration({
+    // Socket.io + Y.js collaboration
+    const { ydoc, connectionStatus } = useTiptapCollaboration({
         docId,
         socketUrl: SOCKET_URL,
         userName,
     });
 
-    // ── Éditeur Tiptap ────────────────────────────────────────────────────────
-    // N'initialiser l'éditeur QUE quand le ydoc est synchronisé
+    // Tiptap editor
+    // Initialed only if the Ydoc is initialed
     const editor: Editor | null = useEditor(
         {
             editable: false,
@@ -47,8 +47,7 @@ export default function DocsEditor() {
                 StarterKit.configure({ history: false }),
                 Highlight,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
-
-                ...(ydoc && isSynced
+                ...(ydoc
                     ? [
                           Collaboration.configure({
                               document: ydoc,
@@ -61,19 +60,23 @@ export default function DocsEditor() {
             injectCSS: false,
             editorProps: {
                 attributes: {
-                    class: 'min-h-[156px] border rounded-md bg-slate-50 py-2 px-3',
+                    class: 'no-scrollbar h-[70dvh] overflow-y-auto border rounded-md bg-slate-50 py-2 px-3',
                 },
             },
         },
-        [ydoc, isSynced] // Recréer l'éditeur quand isSynced passe à true
+        [ydoc]
     );
 
-    // ── Mise à jour des droits d'édition ──────────────────────────────────────
+    // Update edition right
     useEffect(() => {
-        if (!editor || isLoading) return;
-        editor.setEditable(document?.isEditable ?? false);
-    }, [editor, document?.isEditable, isLoading]);
+        if (!editor || isLoading || connectionStatus !== 'connected' || error) {
+            editor?.setEditable(false);
+        } else {
+            editor.setEditable(document?.isEditable ?? false);
+        }
+    }, [editor, document?.isEditable, isLoading, connectionStatus, error]);
 
+    // Variable not used but very important for the TiptapMenu dynamics
     const editorState = useEditorState({
         editor,
         selector: ({ editor }) => {
@@ -96,14 +99,10 @@ export default function DocsEditor() {
         },
     });
 
-    if (isLoading && !document) {
-        return <Loader />;
-    }
-
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-                <div className="text-red-500 text-center">
+                <div className="text-center">
                     <p className="font-semibold">Erreur</p>
                     <p className="text-sm">{error}</p>
                 </div>
@@ -119,25 +118,28 @@ export default function DocsEditor() {
 
     return (
         <>
-            <div className="flex items-center justify-between mb-5">
-                <h1 className="mb-5">{document?.name}</h1>
-                <div className="flex items-center gap-3">
-                    {/* {isSaving && (
-                        <span className="text-xs text-muted-foreground animate-pulse">
-                            Sauvegarde…
-                        </span>
-                    )} */}
-                    <ConnectionBadge status={connectionStatus} />
-                </div>
+            <div className="flex items-center justify-between gap-3 mb-3 md:mb-5">
+                <h1 className="truncate">{document?.name}</h1>
+                <ConnectionBadge status={connectionStatus} />
             </div>
             <div className="flex flex-col gap-3">
                 {editor && (
                     <>
                         <TipTapMenu
                             editor={editor}
-                            editable={document?.isEditable || false}
+                            editable={
+                                (!isLoading &&
+                                    connectionStatus === 'connected' &&
+                                    document?.isEditable &&
+                                    !error) ||
+                                false
+                            }
                         />
-                        <EditorContent editor={editor} />
+                        {isLoading && !document ? (
+                            <Loader />
+                        ) : (
+                            <EditorContent editor={editor} />
+                        )}
                     </>
                 )}
             </div>
