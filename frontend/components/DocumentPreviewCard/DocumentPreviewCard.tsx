@@ -49,43 +49,46 @@ export default function DocumentPreviewCard({
             immediatelyRender: false,
             editorProps: {
                 attributes: {
-                    class: 'max-width max-height border rounded-md bg-slate-50 py-2 px-3',
+                    class: 'w-full h-full',
                 },
             },
         },
         [document?.content]
     );
 
-    const dialogContent = (
-        <>
-            <DialogHeader>
-                <DialogTitle>{name}</DialogTitle>
-            </DialogHeader>
+    const dialogHeader = (
+        <DialogHeader>
+            <DialogTitle>{name}</DialogTitle>
+        </DialogHeader>
+    );
 
-            {!isLoading && document ? (
-                <div className="no-scrollbar h-[70dvh] overflow-y-auto">
-                    <EditorContent editor={editor} />
-                </div>
-            ) : (
-                <Loader />
+    let dialogContent;
+    if (error) {
+        dialogContent = <p>Error</p>;
+    } else {
+        if (!isLoading && document) {
+            dialogContent = <EditorContent editor={editor} />;
+        } else {
+            dialogContent = <Loader />;
+        }
+    }
+
+    const dialogFooter = (
+        <DialogFooter className="grid grid-cols-2 gap-2">
+            {!isLoading && document && document.isEditable && (
+                <>
+                    <Link href={`/docs/${document.id}`} target="_blank">
+                        <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
+                            <PenLine /> Edit
+                        </Button>
+                    </Link>
+                    <DeleteButton
+                        id={document.id}
+                        deleteDocument={deleteDocument}
+                    />
+                </>
             )}
-
-            <DialogFooter className="grid grid-cols-2 gap-2">
-                {!isLoading && document && document.isEditable && (
-                    <>
-                        <Link href={`/docs/${document.id}`} target="_blank">
-                            <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
-                                <PenLine /> Edit
-                            </Button>
-                        </Link>
-                        <DeleteButton
-                            id={document.id}
-                            deleteDocument={deleteDocument}
-                        />
-                    </>
-                )}
-            </DialogFooter>
-        </>
+        </DialogFooter>
     );
 
     return (
@@ -98,7 +101,13 @@ export default function DocumentPreviewCard({
                     <Eye /> Preview
                 </Button>
             </DialogTrigger>
-            <DialogContent>{dialogContent}</DialogContent>
+            <DialogContent>
+                {dialogHeader}
+                <div className="no-scrollbar h-[70dvh] overflow-y-auto border rounded-md bg-slate-50 py-2 px-3">
+                    {dialogContent}
+                </div>
+                {dialogFooter}
+            </DialogContent>
         </Dialog>
     );
 }
