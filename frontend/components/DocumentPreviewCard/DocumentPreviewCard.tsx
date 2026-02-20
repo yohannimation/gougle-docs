@@ -1,5 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import { useDocument } from '@/hooks/useDocument';
+
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Highlight from '@tiptap/extension-highlight';
+import TextAlign from '@tiptap/extension-text-align';
+import { Editor } from '@tiptap/react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -29,6 +37,25 @@ export default function DocumentPreviewCard({
 }: DocumentPreviewProps) {
     const { document, isLoading, error, fetchDocument } = useDocument(id);
 
+    const editor: Editor | null = useEditor(
+        {
+            content: document?.content,
+            editable: false,
+            extensions: [
+                StarterKit,
+                Highlight,
+                TextAlign.configure({ types: ['heading', 'paragraph'] }),
+            ],
+            immediatelyRender: false,
+            editorProps: {
+                attributes: {
+                    class: 'max-width max-height border rounded-md bg-slate-50 py-2 px-3',
+                },
+            },
+        },
+        [document?.content]
+    );
+
     const dialogContent = (
         <>
             <DialogHeader>
@@ -37,7 +64,7 @@ export default function DocumentPreviewCard({
 
             {!isLoading && document ? (
                 <div className="no-scrollbar h-[70dvh] overflow-y-auto">
-                    {document.content}
+                    <EditorContent editor={editor} />
                 </div>
             ) : (
                 <Loader />
