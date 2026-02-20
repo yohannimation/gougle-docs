@@ -5,10 +5,16 @@ import documentService from '../../services/documents.service';
 const DEBOUNCE_MIN_MS = 1000; // Inactivity delay before persistence
 const DEBOUNCE_MAX_MS = 3000; // Persistence force after this delay
 
-// Local document state
+interface User {
+    socketId: string;
+    username: string;
+    userColor: string;
+}
+
 interface DocState {
     ydoc: Y.Doc;
     clients: Set<string>;
+    users: Map<string, User>;
     debounceTimer: NodeJS.Timeout | null;
     maxTimer: NodeJS.Timeout | null;
     pendingSave: boolean;
@@ -23,6 +29,7 @@ function getOrCreateDocState(documentId: string): DocState {
         docStates.set(documentId, {
             ydoc: new Y.Doc(),
             clients: new Set(),
+            users: new Map(),
             debounceTimer: null,
             maxTimer: null,
             pendingSave: false,
@@ -59,6 +66,16 @@ async function persistDocument(
     }
 }
 
+/** Send users list to all document client */
+function broadcastUsers(io: Server, documentId: string, state: DocState): void {
+    const usersList = Array.from(state.users.values()).map((user) => ({
+        username: user.username,
+        userColor: user.userColor,
+    }));
+
+    io.to(documentId).emit('users-update', { users: usersList });
+}
+
 /** Schedule persist with min/max debounce */
 function schedulePersist(documentId: string, state: DocState): void {
     // First update -> prepare the max timer
@@ -81,11 +98,18 @@ function schedulePersist(documentId: string, state: DocState): void {
 // ─── Handler principal ────────────────────────────────────────────────────────
 
 export function documentHandler(io: Server, socket: Socket) {
-    socket.on('join-document', async ({ documentId, userName, userColor }) => {
-        console.log(`📄 ${socket.id} joining document ${documentId}`);
+    socket.on('join-document', async ({ documentId, username, userColor }) => {
+        console.log(
+            `� ${socket.id} (${username}) joining document ${documentId}`
+        );
 
         const state = getOrCreateDocState(documentId);
         state.clients.add(socket.id);
+        state.users.set(socket.id, {
+            socketId: socket.id,
+            username,
+            userColor,
+        });
         socket.join(documentId);
 
         // Load the document from the database if the Y.Doc is empty
@@ -94,9 +118,7 @@ export function documentHandler(io: Server, socket: Socket) {
             const savedYDoc = await documentService.loadYDoc(documentId);
             if (savedYDoc) {
                 Y.applyUpdate(state.ydoc, savedYDoc);
-                console.log(
-                    `[Socket] Document "${documentId}" chargé depuis la DB`
-                );
+                console.log(`[Socket] Document "${documentId}" loaded from DB`);
             }
         }
 
@@ -104,12 +126,8 @@ export function documentHandler(io: Server, socket: Socket) {
         const currentState = Y.encodeStateAsUpdate(state.ydoc);
         socket.emit('document-sync', { update: Array.from(currentState) });
 
-        // Notify other clients
-        socket.to(documentId).emit('user-joined', {
-            userId: socket.id,
-            userName,
-            userColor,
-        });
+        // Notify other client
+        broadcastUsers(io, documentId, state);
     });
 
     // ── Receive and broadcast a Y.js update ─────────────────────────
@@ -130,31 +148,40 @@ export function documentHandler(io: Server, socket: Socket) {
 
     // ── Leave a document ──────────────────────────────────────────────────
     socket.on('leave-document', async ({ documentId }) => {
-        await handleLeave(documentId, socket.id);
+        await handleLeave(documentId, socket.id, io);
     });
 
     // ── Disconnection ──────────────────────────────────────────────────────────
     socket.on('disconnect', async () => {
         for (const [documentId, state] of docStates.entries()) {
             if (state.clients.has(socket.id)) {
-                await handleLeave(documentId, socket.id);
+                await handleLeave(documentId, socket.id, io);
             }
         }
     });
 
     // ─────────────────────────────────────────────────────────────────────────
 
-    async function handleLeave(documentId: string, socketId: string) {
+    async function handleLeave(
+        documentId: string,
+        socketId: string,
+        io: Server
+    ) {
         const state = docStates.get(documentId);
         if (!state) return;
 
         state.clients.delete(socketId);
+        state.users.delete(socketId);
         socket.leave(documentId);
-        socket.to(documentId).emit('user-left', { userId: socketId });
 
         console.log(
             `📄 ${socketId} left "${documentId}" (${state.clients.size} remaining)`
         );
+
+        // Update user list for other users
+        if (state.clients.size > 0) {
+            broadcastUsers(io, documentId, state);
+        }
 
         // Last client leaved -> persist and clear the memory
         if (state.clients.size === 0) {
