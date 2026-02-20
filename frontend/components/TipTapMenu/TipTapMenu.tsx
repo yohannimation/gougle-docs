@@ -25,7 +25,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
     }
 
     return (
-        <div className="flex gap-3">
+        <div className="flex gap-y-1.5 gap-x-3 md:gap-3 flex-wrap">
             <ButtonGroup>
                 <Button
                     variant={
