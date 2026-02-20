@@ -16,9 +16,24 @@ import { Button } from '@/components/ui/button';
 
 import ConnectionBadge from '@/components/ConnectionBadge/ConnectionBadge';
 import Loader from '@/components/Loader/Loader';
+import UsersGroup from '@/components/UsersGroup/UsersGroup';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
+import animals from '@/data/animals.json';
+
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
+
+function getRandomAnimal(): string {
+    return animals[Math.floor(Math.random() * animals.length)];
+}
+
+function getRandomLightColor(): string {
+    const hue = Math.floor(Math.random() * 360); // 0-360 : all color pallet
+    const saturation = 60 + Math.floor(Math.random() * 30); // 60-90% : vivas color but not grey too
+    const lightness = 70 + Math.floor(Math.random() * 20); // 70-90% : light color
+
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
 
 export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
@@ -26,16 +41,15 @@ export default function DocsEditor() {
     // Loading document data (name, content, etc.)
     const { document, isLoading, error } = useDocument(docId, true);
 
-    const userName = useMemo(
-        () => 'User ' + Math.floor(Math.random() * 1000),
-        []
-    );
+    const username = useMemo(() => getRandomAnimal(), []);
+    const userColor = useMemo(() => getRandomLightColor(), []);
 
     // Socket.io + Y.js collaboration
-    const { ydoc, connectionStatus } = useTiptapCollaboration({
+    const { ydoc, connectionStatus, users } = useTiptapCollaboration({
         docId,
         socketUrl: SOCKET_URL,
-        userName,
+        username,
+        userColor,
     });
 
     // Tiptap editor
@@ -120,7 +134,10 @@ export default function DocsEditor() {
         <>
             <div className="flex items-center justify-between gap-3 mb-3 md:mb-5">
                 <h1 className="truncate">{document?.name}</h1>
-                <ConnectionBadge status={connectionStatus} />
+                <div className="flex items-center gap-3">
+                    <ConnectionBadge status={connectionStatus} />
+                    <UsersGroup users={users} />
+                </div>
             </div>
             <div className="flex flex-col gap-3">
                 {editor && (

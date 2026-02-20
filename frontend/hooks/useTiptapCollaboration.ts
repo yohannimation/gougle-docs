@@ -8,13 +8,18 @@ export type ConnectionStatus =
     | 'disconnected'
     | 'error';
 
+export interface User {
+    username: string;
+    userColor: string;
+}
+
 interface UseTiptapCollaborationOptions {
     /** Document ID to synchronize */
     docId: string;
     /** Socket.io server URL, ex: http://localhost:3001 */
     socketUrl: string;
     /** User name for the collaboration */
-    userName?: string;
+    username?: string;
     /** Cursor color (hex) */
     userColor?: string;
 }
@@ -26,6 +31,8 @@ interface UseTiptapCollaborationReturn {
     connectionStatus: ConnectionStatus;
     /** Socket.io instance (for awareness if needed) */
     socket: Socket | null;
+    /** Users data */
+    users: User[];
 }
 
 /**
@@ -34,11 +41,12 @@ interface UseTiptapCollaborationReturn {
 export function useTiptapCollaboration({
     docId,
     socketUrl,
-    userName = 'Anonymous',
+    username = 'Anonymous',
     userColor = '#' + Math.floor(Math.random() * 16777215).toString(16),
 }: UseTiptapCollaborationOptions): UseTiptapCollaborationReturn {
     const [connectionStatus, setConnectionStatus] =
         useState<ConnectionStatus>('connecting');
+    const [users, setUsers] = useState<User[]>([]);
 
     const socketRef = useRef<Socket | null>(null);
     const ydocRef = useRef<Y.Doc>(new Y.Doc());
@@ -63,7 +71,7 @@ export function useTiptapCollaboration({
             // Join document
             socket.emit('join-document', {
                 documentId: docId,
-                userName,
+                username,
                 userColor,
             });
         });
@@ -71,6 +79,7 @@ export function useTiptapCollaboration({
         socket.on('disconnect', () => {
             console.log('[Socket.io] Disconnected');
             setConnectionStatus('disconnected');
+            setUsers([]);
         });
 
         socket.on('connect_error', (err) => {
@@ -92,6 +101,12 @@ export function useTiptapCollaboration({
             Y.applyUpdate(ydoc, updateBuffer);
         });
 
+        // Check user list update
+        socket.on('users-update', ({ users: usersList }) => {
+            console.log('[Users] List updated :', usersList);
+            setUsers(usersList);
+        });
+
         // Send local update to the server
         const onUpdate = (update: Uint8Array, origin: any) => {
             // Don't resend the update received
@@ -107,7 +122,7 @@ export function useTiptapCollaboration({
         // ── Other users ──────────────────────────────────────────────
         socket.on(
             'user-joined',
-            ({ userId, userName: name, userColor: color }) => {
+            ({ userId, username: name, userColor: color }) => {
                 console.log(`[User] ${name} join the document`);
             }
         );
@@ -129,5 +144,6 @@ export function useTiptapCollaboration({
         ydoc: ydocRef.current,
         connectionStatus,
         socket: socketRef.current,
+        users,
     };
 }
