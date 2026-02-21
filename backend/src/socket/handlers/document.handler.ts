@@ -130,6 +130,10 @@ export function documentHandler(io: Server, socket: Socket) {
         broadcastUsers(io, documentId, state);
     });
 
+    socket.on('awareness-update', ({ documentId, update }) => {
+        socket.to(documentId).emit('awareness-update', { update });
+    });
+
     // ── Receive and broadcast a Y.js update ─────────────────────────
     socket.on('document-update', ({ documentId, update }) => {
         const state = docStates.get(documentId);
