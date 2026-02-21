@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import * as Y from 'yjs';
+import {
+    Awareness,
+    applyAwarenessUpdate,
+    encodeAwarenessUpdate,
+} from 'y-protocols/awareness';
 
 export type ConnectionStatus =
     | 'connecting'
@@ -24,6 +29,10 @@ interface UseTiptapCollaborationOptions {
     userColor?: string;
 }
 
+interface ProviderLike {
+    awareness: Awareness;
+}
+
 interface UseTiptapCollaborationReturn {
     /** Y.Doc shared to give at Collaboration.configure({ document }) */
     ydoc: Y.Doc | null;
@@ -33,6 +42,8 @@ interface UseTiptapCollaborationReturn {
     socket: Socket | null;
     /** Users data */
     users: User[];
+    /** Used for CollaborationCaret */
+    provider: ProviderLike | null;
 }
 
 /**
@@ -50,11 +61,16 @@ export function useTiptapCollaboration({
 
     const socketRef = useRef<Socket | null>(null);
     const ydocRef = useRef<Y.Doc>(new Y.Doc());
+    const awarenessRef = useRef<Awareness>(new Awareness(ydocRef.current));
+    const providerRef = useRef<ProviderLike>({
+        awareness: awarenessRef.current,
+    });
 
     useEffect(() => {
         if (!docId || !socketUrl) return;
 
         const ydoc = ydocRef.current;
+        const awareness = awarenessRef.current;
 
         // Socket.io connection
         const socket = io(socketUrl, {
@@ -62,6 +78,11 @@ export function useTiptapCollaboration({
             reconnection: true,
         });
         socketRef.current = socket;
+
+        awareness.setLocalStateField('user', {
+            name: username,
+            color: userColor,
+        });
 
         // Connection management
         socket.on('connect', () => {
@@ -107,6 +128,12 @@ export function useTiptapCollaboration({
             setUsers(usersList);
         });
 
+        // Awareness update
+        socket.on('awareness-update', ({ update }) => {
+            const awarenessUpdate = new Uint8Array(update);
+            applyAwarenessUpdate(awareness, awarenessUpdate, socket.id);
+        });
+
         // Send local update to the server
         const onUpdate = (update: Uint8Array, origin: any) => {
             // Don't resend the update received
@@ -118,6 +145,20 @@ export function useTiptapCollaboration({
             }
         };
         ydoc.on('update', onUpdate);
+
+        const onAwarenessChange = ({ added, updated, removed }: any) => {
+            const changedClients = added.concat(updated).concat(removed);
+            const awarenessUpdate = encodeAwarenessUpdate(
+                awareness,
+                changedClients
+            );
+
+            socket.emit('awareness-update', {
+                documentId: docId,
+                update: Array.from(awarenessUpdate),
+            });
+        };
+        awareness.on('change', onAwarenessChange);
 
         // ── Other users ──────────────────────────────────────────────
         socket.on(
@@ -134,6 +175,7 @@ export function useTiptapCollaboration({
         // ── Cleaning ─────────────────────────────────────────────────────────
         return () => {
             ydoc.off('update', onUpdate);
+            awareness.off('change', onAwarenessChange);
             socket.emit('leave-document', { documentId: docId });
             socket.disconnect();
             socketRef.current = null;
@@ -145,5 +187,6 @@ export function useTiptapCollaboration({
         connectionStatus,
         socket: socketRef.current,
         users,
+        provider: providerRef.current,
     };
 }

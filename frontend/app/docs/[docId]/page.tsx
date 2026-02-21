@@ -7,6 +7,7 @@ import { useTiptapCollaboration } from '@/hooks/useTiptapCollaboration';
 
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import CollaborationCaret from '@tiptap/extension-collaboration-caret';
 import Highlight from '@tiptap/extension-highlight';
 import TextAlign from '@tiptap/extension-text-align';
 import Collaboration from '@tiptap/extension-collaboration';
@@ -45,7 +46,7 @@ export default function DocsEditor() {
     const userColor = useMemo(() => getRandomLightColor(), []);
 
     // Socket.io + Y.js collaboration
-    const { ydoc, connectionStatus, users } = useTiptapCollaboration({
+    const { ydoc, connectionStatus, users, provider } = useTiptapCollaboration({
         docId,
         socketUrl: SOCKET_URL,
         username,
@@ -61,10 +62,17 @@ export default function DocsEditor() {
                 StarterKit.configure({ history: false }),
                 Highlight,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
-                ...(ydoc
+                ...(ydoc && provider
                     ? [
                           Collaboration.configure({
                               document: ydoc,
+                          }),
+                          CollaborationCaret.configure({
+                              provider,
+                              user: {
+                                  name: username,
+                                  color: userColor,
+                              },
                           }),
                       ]
                     : []),
@@ -78,7 +86,7 @@ export default function DocsEditor() {
                 },
             },
         },
-        [ydoc]
+        [ydoc, provider]
     );
 
     // Update edition right
