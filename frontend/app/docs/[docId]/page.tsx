@@ -9,6 +9,7 @@ import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCaret from '@tiptap/extension-collaboration-caret';
 import Highlight from '@tiptap/extension-highlight';
+import { ListKit } from '@tiptap/extension-list';
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
@@ -62,6 +63,7 @@ export default function DocsEditor() {
             extensions: [
                 StarterKit.configure({ history: false }),
                 Highlight,
+                ListKit,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
                 Underline,
                 ...(ydoc && provider
@@ -115,6 +117,8 @@ export default function DocsEditor() {
                 isActiveItalic: editor.isActive('italic'),
                 isActiveUderline: editor.isActive('underline'),
                 isActiveStrike: editor.isActive('strike'),
+                isActiveBulletList: editor.isActive('bulletList'),
+                isActiveOrderedList: editor.isActive('orderedList'),
                 isActiveHighlight: editor.isActive('highlight'),
                 isActiveLeft: editor.isActive({ textAlign: 'left' }),
                 isActiveCenter: editor.isActive({ textAlign: 'center' }),

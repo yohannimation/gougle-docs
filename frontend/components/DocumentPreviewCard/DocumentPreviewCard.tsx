@@ -5,6 +5,7 @@ import { useDocument } from '@/hooks/useDocument';
 
 import { Editor, useEditor, EditorContent } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
+import { ListKit } from '@tiptap/extension-list';
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
@@ -44,6 +45,7 @@ export default function DocumentPreviewCard({
             extensions: [
                 StarterKit,
                 Highlight,
+                ListKit,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
                 Underline,
             ],

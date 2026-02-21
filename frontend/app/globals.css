@@ -214,6 +214,16 @@ button {
         border-radius: 0.4rem;
     }
 
+    ul,
+    ol {
+        padding-left: 1rem;
+        list-style: revert;
+    }
+
+    ol ol {
+        list-style: lower-latin;
+    }
+
     /* Placeholder (at the top) */
     p.is-editor-empty:first-child::before {
         color: var(--gray-4);

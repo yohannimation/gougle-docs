@@ -7,6 +7,8 @@ import {
     Bold,
     Highlighter,
     Italic,
+    List,
+    ListOrdered,
     Strikethrough,
     TextAlignCenter,
     TextAlignEnd,
@@ -40,7 +42,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    Titre 1
+                    Title 1
                 </Button>
                 <Button
                     variant={
@@ -54,7 +56,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    Titre 2
+                    Title 2
                 </Button>
                 <Button
                     variant={
@@ -68,7 +70,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    Titre 3
+                    Title 3
                 </Button>
                 <Button
                     variant={
@@ -89,7 +91,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     disabled={!editable}
                 >
-                    <Bold /> Bold
+                    <Bold />
                 </Button>
                 <Button
                     variant={editor.isActive('italic') ? 'default' : 'outline'}
@@ -97,7 +99,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                     disabled={!editable}
                 >
-                    <Italic /> Italic
+                    <Italic />
                 </Button>
                 <Button
                     variant={
@@ -109,7 +111,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    <Underline /> Underline
+                    <Underline />
                 </Button>
                 <Button
                     variant={editor.isActive('strike') ? 'default' : 'outline'}
@@ -117,7 +119,34 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     onClick={() => editor.chain().focus().toggleStrike().run()}
                     disabled={!editable}
                 >
-                    <Strikethrough /> Strike
+                    <Strikethrough />
+                </Button>
+            </ButtonGroup>
+
+            <ButtonGroup>
+                <Button
+                    variant={
+                        editor.isActive('bulletList') ? 'default' : 'outline'
+                    }
+                    size="sm"
+                    onClick={() =>
+                        editor.chain().focus().toggleBulletList().run()
+                    }
+                    disabled={!editable}
+                >
+                    <List /> Bullet
+                </Button>
+                <Button
+                    variant={
+                        editor.isActive('orderedList') ? 'default' : 'outline'
+                    }
+                    size="sm"
+                    onClick={() =>
+                        editor.chain().focus().toggleOrderedList().run()
+                    }
+                    disabled={!editable}
+                >
+                    <ListOrdered /> Ordered
                 </Button>
             </ButtonGroup>
 
@@ -143,7 +172,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    <TextAlignStart /> Left
+                    <TextAlignStart />
                 </Button>
                 <Button
                     variant={
@@ -157,7 +186,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    <TextAlignCenter /> Center
+                    <TextAlignCenter />
                 </Button>
                 <Button
                     variant={
@@ -171,7 +200,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    <TextAlignEnd /> Right
+                    <TextAlignEnd />
                 </Button>
                 <Button
                     variant={
@@ -185,7 +214,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    <TextAlignJustify /> Justify
+                    <TextAlignJustify />
                 </Button>
             </ButtonGroup>
         </div>
