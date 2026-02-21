@@ -12,6 +12,7 @@ import {
     TextAlignEnd,
     TextAlignJustify,
     TextAlignStart,
+    Underline,
 } from 'lucide-react';
 
 interface TipTapMenuProps {
@@ -97,6 +98,18 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     disabled={!editable}
                 >
                     <Italic /> Italic
+                </Button>
+                <Button
+                    variant={
+                        editor.isActive('underline') ? 'default' : 'outline'
+                    }
+                    size="sm"
+                    onClick={() =>
+                        editor.chain().focus().toggleUnderline().run()
+                    }
+                    disabled={!editable}
+                >
+                    <Underline /> Underline
                 </Button>
                 <Button
                     variant={editor.isActive('strike') ? 'default' : 'outline'}

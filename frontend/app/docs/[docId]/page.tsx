@@ -6,11 +6,12 @@ import { useDocument } from '@/hooks/useDocument';
 import { useTiptapCollaboration } from '@/hooks/useTiptapCollaboration';
 
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCaret from '@tiptap/extension-collaboration-caret';
 import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
-import Collaboration from '@tiptap/extension-collaboration';
+import Underline from '@tiptap/extension-underline';
 import { Editor } from '@tiptap/react';
 
 import { Button } from '@/components/ui/button';
@@ -62,6 +63,7 @@ export default function DocsEditor() {
                 StarterKit.configure({ history: false }),
                 Highlight,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
+                Underline,
                 ...(ydoc && provider
                     ? [
                           Collaboration.configure({
@@ -111,6 +113,7 @@ export default function DocsEditor() {
                 isActiveParagraph: editor.isActive('paragraph'),
                 isActiveBold: editor.isActive('bold'),
                 isActiveItalic: editor.isActive('italic'),
+                isActiveUderline: editor.isActive('underline'),
                 isActiveStrike: editor.isActive('strike'),
                 isActiveHighlight: editor.isActive('highlight'),
                 isActiveLeft: editor.isActive({ textAlign: 'left' }),

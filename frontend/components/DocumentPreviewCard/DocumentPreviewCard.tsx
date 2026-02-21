@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { useDocument } from '@/hooks/useDocument';
 
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import { Editor, useEditor, EditorContent } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
-import { Editor } from '@tiptap/react';
+import Underline from '@tiptap/extension-underline';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -45,6 +45,7 @@ export default function DocumentPreviewCard({
                 StarterKit,
                 Highlight,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
+                Underline,
             ],
             immediatelyRender: false,
             editorProps: {
