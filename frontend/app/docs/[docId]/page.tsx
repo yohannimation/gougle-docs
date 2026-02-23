@@ -33,9 +33,18 @@ function getRandomAnimal(): string {
 function getRandomLightColor(): string {
     const hue = Math.floor(Math.random() * 360); // 0-360 : all color pallet
     const saturation = 60 + Math.floor(Math.random() * 30); // 60-90% : vivas color but not grey too
-    const lightness = 70 + Math.floor(Math.random() * 20); // 70-90% : light color
+    let lightness = 70 + Math.floor(Math.random() * 20); // 70-90% : light color
 
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    // Conversion HSL -> RGB
+    lightness /=100
+    const a = saturation * Math.min(lightness, 1 - lightness) / 100
+    const f = n => {
+        const k = (n + hue / 30) % 12;
+        const color = lightness - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0'); // Convert to Hex and prefix "0" if needed
+    }
+
+    return `#${f(0)}${f(8)}${f(4)}`;
 }
 
 export default function DocsEditor() {
