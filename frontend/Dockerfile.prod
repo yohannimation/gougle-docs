@@ -1,21 +1,30 @@
 FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat
 
 # 1. Install dependencies
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm ci
 
 # 2. Build
 FROM base AS builder
 WORKDIR /app
+
+# Build args pour les variables NEXT_PUBLIC_
+ARG PUBLIC_API_URL
+ARG PUBLIC_SOCKET_URL
+ARG INTERNAL_API_URL
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Définir les variables d'environnement pour le build
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV PUBLIC_API_URL=${PUBLIC_API_URL}
+ENV PUBLIC_SOCKET_URL=${PUBLIC_SOCKET_URL}
+ENV INTERNAL_API_URL=${INTERNAL_API_URL}
 
 RUN npm run build
 
@@ -26,12 +35,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 USER nextjs
 
