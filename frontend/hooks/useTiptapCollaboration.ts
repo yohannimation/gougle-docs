@@ -74,8 +74,14 @@ export function useTiptapCollaboration({
 
         // Socket.io connection
         const socket = io(socketUrl, {
+            path: '/socket.io', // Explicite
             transports: ['websocket'],
             reconnection: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000,
+            timeout: 20000,
+            autoConnect: true,
+            withCredentials: true,
         });
         socketRef.current = socket;
 
