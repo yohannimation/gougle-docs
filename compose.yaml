@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: gougle-docs-db
+    container_name: gougle-docs-postgres
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -9,7 +9,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - app-network
+      - gougle-docs-network
 
   backend:
     build:
@@ -19,7 +19,6 @@ services:
     environment:
       DB_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
       PORT: 3001
-      FRONT_URL: http://localhost:3000
       NODE_ENV: development
     ports:
       - "3001:3001"
@@ -30,7 +29,7 @@ services:
       - /app/node_modules
       - /app/dist
     networks:
-      - app-network
+      - gougle-docs-network
 
   frontend:
     build:
@@ -38,8 +37,9 @@ services:
       dockerfile: Dockerfile
     container_name: gougle-docs-frontend
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3001
-      NEXT_PUBLIC_SOCKET_URL: http://localhost:3001
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+      PUBLIC_SOCKET_URL: ${PUBLIC_SOCKET_URL}
+      INTERNAL_API_URL: ${INTERNAL_API_URL}
       WATCHPACK_POLLING: "true"
       CHOKIDAR_USEPOLLING: "true"
     ports:
@@ -51,7 +51,7 @@ services:
       - /app/node_modules
       - /app/.next
     networks:
-      - app-network
+      - gougle-docs-network
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -68,7 +68,7 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
-      - app-network
+      - gougle-docs-network
     depends_on:
       - postgres
 
@@ -77,5 +77,5 @@ volumes:
   pgadmin_data:
 
 networks:
-  app-network:
+  gougle-docs-network:
     driver: bridge
