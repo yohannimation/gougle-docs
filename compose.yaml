@@ -37,9 +37,9 @@ services:
       dockerfile: Dockerfile
     container_name: gougle-docs-frontend
     environment:
-      PUBLIC_API_URL: ${PUBLIC_API_URL}
-      PUBLIC_SOCKET_URL: ${PUBLIC_SOCKET_URL}
-      INTERNAL_API_URL: ${INTERNAL_API_URL}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_SOCKET_URL: ${NEXT_PUBLIC_SOCKET_URL}
+      NEXT_INTERNAL_API_URL: ${NEXT_INTERNAL_API_URL}
       WATCHPACK_POLLING: "true"
       CHOKIDAR_USEPOLLING: "true"
     ports:

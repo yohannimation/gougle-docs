@@ -24,7 +24,7 @@ import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 import animals from '@/data/animals.json';
 
-const SOCKET_URL = process.env.PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
 
 function getRandomAnimal(): string {
     return animals[Math.floor(Math.random() * animals.length)];
