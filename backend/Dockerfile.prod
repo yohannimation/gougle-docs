@@ -1,0 +1,25 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files and prisma schema
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Install production dependencies
+RUN npm ci --only=production
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Copy source code
+COPY . .
+
+# Build TypeScript (si tu as un build script)
+# Sinon, commente cette ligne
+RUN npm run build 2>/dev/null || echo "No build script, using ts-node"
+
+EXPOSE 3001
+
+# Run migrations then start
+CMD sh -c "npx prisma migrate deploy && npm start"
