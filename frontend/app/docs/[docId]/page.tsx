@@ -70,7 +70,7 @@ export default function DocsEditor() {
         {
             editable: false,
             extensions: [
-                StarterKit.configure({ history: false }),
+                StarterKit.configure({ undoRedo: false }),
                 Highlight,
                 ListKit,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
