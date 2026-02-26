@@ -23,6 +23,8 @@ import UsersGroup from '@/components/UsersGroup/UsersGroup';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 import animals from '@/data/animals.json';
+import FormDocumentNameUpdate from '@/components/Forms/FormDocumentNameUpdate/FormDocumentNameUpdate';
+import { useDocumentNameUpdateForm } from '@/hooks/useDocumentNameUpdateForm';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
 
@@ -142,6 +144,12 @@ export default function DocsEditor() {
         },
     });
 
+    const formik = useDocumentNameUpdateForm(
+        document?.name ?? '',
+        updateDocument,
+        () => {}
+    );
+
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
@@ -163,7 +171,7 @@ export default function DocsEditor() {
     return (
         <>
             <div className="flex items-center justify-between gap-3 mb-3 md:mb-5">
-                <h1>{document.name}</h1>
+                <FormDocumentNameUpdate formik={formik} />
                 <div className="flex items-center gap-3">
                     <ConnectionBadge status={connectionStatus} />
                     <UsersGroup users={users} />
