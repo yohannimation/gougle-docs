@@ -36,13 +36,15 @@ function getRandomLightColor(): string {
     let lightness = 70 + Math.floor(Math.random() * 20); // 70-90% : light color
 
     // Conversion HSL -> RGB
-    lightness /=100
-    const a = saturation * Math.min(lightness, 1 - lightness) / 100
-    const f = n => {
+    lightness /= 100;
+    const a = (saturation * Math.min(lightness, 1 - lightness)) / 100;
+    const f = (n) => {
         const k = (n + hue / 30) % 12;
         const color = lightness - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-        return Math.round(255 * color).toString(16).padStart(2, '0'); // Convert to Hex and prefix "0" if needed
-    }
+        return Math.round(255 * color)
+            .toString(16)
+            .padStart(2, '0'); // Convert to Hex and prefix "0" if needed
+    };
 
     return `#${f(0)}${f(8)}${f(4)}`;
 }
@@ -51,7 +53,10 @@ export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
 
     // Loading document data (name, content, etc.)
-    const { document, isLoading, error } = useDocument(docId, true);
+    const { document, isLoading, error, updateDocument } = useDocument(
+        docId,
+        true
+    );
 
     const username = useMemo(() => getRandomAnimal(), []);
     const userColor = useMemo(() => getRandomLightColor(), []);
@@ -150,6 +155,7 @@ export default function DocsEditor() {
                 >
                     Réessayer
                 </Button>
+                <Button variant="secondary">Home</Button>
             </div>
         );
     }
@@ -157,7 +163,7 @@ export default function DocsEditor() {
     return (
         <>
             <div className="flex items-center justify-between gap-3 mb-3 md:mb-5">
-                <h1 className="truncate">{document?.name}</h1>
+                <h1>{document.name}</h1>
                 <div className="flex items-center gap-3">
                     <ConnectionBadge status={connectionStatus} />
                     <UsersGroup users={users} />

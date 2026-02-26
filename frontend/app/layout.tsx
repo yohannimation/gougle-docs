@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
-import Header from '@/components/Header/Header';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -32,10 +31,7 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh flex flex-col`}
             >
                 <TooltipProvider>
-                    <Header />
-                    <main className="py-6 px-10 container mx-auto flex-1 min-h-0 overflow-hidden">
-                        {children}
-                    </main>
+                    {children}
                     <Toaster
                         position="top-center"
                         richColors
