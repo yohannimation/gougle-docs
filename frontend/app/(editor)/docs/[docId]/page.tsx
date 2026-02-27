@@ -102,7 +102,7 @@ export default function DocsEditor() {
             injectCSS: false,
             editorProps: {
                 attributes: {
-                    class: 'no-scrollbar h-[70dvh] overflow-y-auto border rounded-md bg-slate-50 py-2 px-3',
+                    class: 'h-full overflow-y-auto border rounded-md bg-slate-50 py-2 px-3',
                 },
             },
         },
@@ -177,7 +177,7 @@ export default function DocsEditor() {
                     <UsersGroup users={users} />
                 </div>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 flex-1 min-h-0">
                 {editor && (
                     <>
                         <TipTapMenu
@@ -193,7 +193,10 @@ export default function DocsEditor() {
                         {isLoading && !document ? (
                             <Loader />
                         ) : (
-                            <EditorContent editor={editor} />
+                            <EditorContent
+                                editor={editor}
+                                className="flex-1 min-h-0"
+                            />
                         )}
                     </>
                 )}
