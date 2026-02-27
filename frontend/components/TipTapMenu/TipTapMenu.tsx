@@ -9,12 +9,14 @@ import {
     Italic,
     List,
     ListOrdered,
+    Redo,
     Strikethrough,
     TextAlignCenter,
     TextAlignEnd,
     TextAlignJustify,
     TextAlignStart,
     Underline,
+    Undo,
 } from 'lucide-react';
 
 interface TipTapMenuProps {
@@ -29,6 +31,25 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
 
     return (
         <div className="flex gap-y-1.5 gap-x-3 md:gap-3 flex-wrap">
+            <ButtonGroup>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => editor.chain().focus().undo().run()}
+                    disabled={!editable}
+                >
+                    <Undo />
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => editor.chain().focus().redo().run()}
+                    disabled={!editable}
+                >
+                    <Redo />
+                </Button>
+            </ButtonGroup>
+
             <ButtonGroup>
                 <Button
                     variant={
