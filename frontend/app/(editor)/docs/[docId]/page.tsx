@@ -170,7 +170,7 @@ export default function DocsEditor() {
 
     return (
         <>
-            <div className="flex items-center justify-between gap-3 mb-3 md:mb-5">
+            <div className="group flex items-center justify-between gap-3 mb-3 md:mb-5">
                 <FormDocumentNameUpdate formik={formik} />
                 <div className="flex items-center gap-3">
                     <ConnectionBadge status={connectionStatus} />

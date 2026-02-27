@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { FormikProps } from 'formik';
 import { DocumentUpdateInput } from '@/lib/api/documents';
 
-import { Pen } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 
 interface FormDocumentCreationProps {
     formik: FormikProps<DocumentUpdateInput>;
@@ -68,7 +68,7 @@ export default function FormDocumentNameUpdate({
                             "
                         />
                     </div>
-                    <Pen className="size-4 stroke-zinc-500" />
+                    <Pencil className="size-5 stroke-transparent group-hover:stroke-zinc-500" />
                 </FieldLabel>
                 <FieldDescription>{formik.errors.name}</FieldDescription>
             </Field>
