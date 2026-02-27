@@ -5,7 +5,7 @@ import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import DeleteButton from '@/components/DeleteButton/DeleteButton';
 import DocumentPreviewCard from '@/components/DocumentPreviewCard/DocumentPreviewCard';
 
-import { PenLine } from 'lucide-react';
+import { PencilLine } from 'lucide-react';
 
 import type { DocumentCardInterface } from '@/interface/Document.interface';
 interface DocumentCardProps {
@@ -28,7 +28,7 @@ export default function DocumentCard({
                 <>
                     <Link href={`/docs/${document.id}`} target="_blank">
                         <Button className="w-full bg-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white">
-                            <PenLine /> Edit
+                            <PencilLine /> Edit
                         </Button>
                     </Link>
                     <DeleteButton
