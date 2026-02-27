@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useDocument } from '@/hooks/useDocument';
+import { useDocumentNameUpdateForm } from '@/hooks/useDocumentNameUpdateForm';
 import { useTiptapCollaboration } from '@/hooks/useTiptapCollaboration';
 
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
@@ -18,13 +20,14 @@ import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
 
 import ConnectionBadge from '@/components/ConnectionBadge/ConnectionBadge';
+import FormDocumentNameUpdate from '@/components/Forms/FormDocumentNameUpdate/FormDocumentNameUpdate';
 import Loader from '@/components/Loader/Loader';
 import UsersGroup from '@/components/UsersGroup/UsersGroup';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 import animals from '@/data/animals.json';
-import FormDocumentNameUpdate from '@/components/Forms/FormDocumentNameUpdate/FormDocumentNameUpdate';
-import { useDocumentNameUpdateForm } from '@/hooks/useDocumentNameUpdateForm';
+
+import { ArrowLeft } from 'lucide-react';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
 
@@ -171,7 +174,14 @@ export default function DocsEditor() {
     return (
         <>
             <div className="group flex items-center justify-between gap-3 mb-3 md:mb-5">
-                <FormDocumentNameUpdate formik={formik} />
+                <div className="flex items-center gap-5">
+                    <Link href="/docs">
+                        <Button size="icon">
+                            <ArrowLeft />
+                        </Button>
+                    </Link>
+                    <FormDocumentNameUpdate formik={formik} />
+                </div>
                 <div className="flex items-center gap-3">
                     <ConnectionBadge status={connectionStatus} />
                     <UsersGroup users={users} />
