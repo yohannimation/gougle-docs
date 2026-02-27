@@ -19,48 +19,57 @@ export default function FormDocumentNameUpdate({
                 data-invalid={!!formik.errors.name || undefined}
                 className="flex gap-1"
             >
-                <div className="flex gap-2 max-w-70">
-                    <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder={formik.errors.name ? 'Document name' : ''}
-                        autoComplete="off"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        aria-invalid={!!formik.errors.name || undefined}
-                        style={{
-                            fontSize: 'clamp(1.87rem, 2.64vw, 2.2rem)',
-                        }}
-                        className="
-                        h-11 px-0 font-semibold
-                        overflow-hidden text-ellipsis
+                <FieldLabel
+                    htmlFor="name"
+                    className="flex gap-2 cursor-pointer"
+                >
+                    <div className="relative inline-grid max-w-30 md:max-w-80">
+                        {/* Mirror */}
+                        <span
+                            className="invisible whitespace-pre px-3.5 py-1"
+                            style={{
+                                fontSize: 'clamp(1.87rem, 2.64vw, 2.2rem)',
+                            }}
+                        >
+                            {formik.values.name || 'Document name'}
+                        </span>
 
-                        border-transparent
-                        shadow-none
-                        bg-transparent
+                        <Input
+                            id="name"
+                            name="name"
+                            type="text"
+                            autoComplete="off"
+                            value={formik.values.name ?? ''}
+                            onChange={formik.handleChange}
+                            aria-invalid={!!formik.errors.name || undefined}
+                            style={{
+                                fontSize: 'clamp(1.87rem, 2.64vw, 2.2rem)',
+                            }}
+                            className="
+                                absolute inset-0 w-full
 
-                        hover:border-input
-                        hover:px-3
-                        hover:py-1
-                        hover:h-13
-                        focus-visible:px-3
-                        focus-visible:py-1
-                        focus-visible:h-13
-                        focus-visible:border-ring
-                        focus-visible:ring-ring/50
-                        focus-visible:ring-[3px]
+                                h-12 px-0 font-semibold
 
-                        aria-invalid:px-3
-                        aria-invalid:border-destructive
+                                border-transparent
+                                shadow-none
+                                bg-transparent
 
-                        transition-all duration-200
-                    "
-                    />
-                    <FieldLabel htmlFor="name">
-                        <Pen className="size-4 stroke-zinc-500" />
-                    </FieldLabel>
-                </div>
+                                hover:border-input
+                                hover:px-3
+                                focus-visible:px-3
+                                focus-visible:border-ring
+                                focus-visible:ring-ring/50
+                                focus-visible:ring-[3px]
+
+                                aria-invalid:px-3
+                                aria-invalid:border-destructive
+
+                                transition-all duration-200
+                            "
+                        />
+                    </div>
+                    <Pen className="size-4 stroke-zinc-500" />
+                </FieldLabel>
                 <FieldDescription>{formik.errors.name}</FieldDescription>
             </Field>
         </form>
