@@ -110,8 +110,6 @@ export class DocumentController {
 
             const document = await documentService.update(id, {
                 name: name?.trim(),
-                isEditable,
-                content,
             });
 
             res.json({
