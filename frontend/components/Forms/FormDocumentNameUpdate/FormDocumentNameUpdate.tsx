@@ -26,9 +26,9 @@ export default function FormDocumentNameUpdate({
                     <div className="relative inline-grid max-w-30 md:max-w-80">
                         {/* Mirror */}
                         <span
-                            className="invisible whitespace-pre px-3.5 py-1"
+                            className="invisible whitespace-pre p-1.5 px-2 h-9"
                             style={{
-                                fontSize: 'clamp(1.87rem, 2.64vw, 2.2rem)',
+                                fontSize: 'clamp(1.1rem, 1.3vw, 1.3rem)',
                             }}
                         >
                             {formik.values.name || 'Document name'}
@@ -43,25 +43,23 @@ export default function FormDocumentNameUpdate({
                             onChange={formik.handleChange}
                             aria-invalid={!!formik.errors.name || undefined}
                             style={{
-                                fontSize: 'clamp(1.87rem, 2.64vw, 2.2rem)',
+                                fontSize: 'clamp(1.1rem, 1.3vw, 1.3rem)',
                             }}
                             className="
                                 absolute inset-0 w-full
+                                overflow-hidden text-ellipsis
 
-                                h-12 px-0 font-semibold
+                                h-9 p-1.5 font-semibold
 
                                 border-transparent
                                 shadow-none
                                 bg-transparent
 
                                 hover:border-input
-                                hover:px-3
-                                focus-visible:px-3
                                 focus-visible:border-ring
                                 focus-visible:ring-ring/50
                                 focus-visible:ring-[3px]
 
-                                aria-invalid:px-3
                                 aria-invalid:border-destructive
 
                                 transition-all duration-200
@@ -70,7 +68,6 @@ export default function FormDocumentNameUpdate({
                     </div>
                     <Pencil className="size-5 stroke-transparent group-hover:stroke-zinc-500" />
                 </FieldLabel>
-                <FieldDescription>{formik.errors.name}</FieldDescription>
             </Field>
         </form>
     );

@@ -173,11 +173,11 @@ export default function DocsEditor() {
 
     return (
         <>
-            <div className="group flex items-center justify-between gap-3 mb-3 md:mb-5">
+            <div className="group flex items-center justify-between gap-3 mb-3 mb-2">
                 <div className="flex items-center gap-5">
                     <Link href="/docs">
-                        <Button size="icon">
-                            <ArrowLeft />
+                        <Button>
+                            <ArrowLeft /> Back
                         </Button>
                     </Link>
                     <FormDocumentNameUpdate formik={formik} />
