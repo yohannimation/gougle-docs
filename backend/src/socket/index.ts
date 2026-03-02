@@ -11,7 +11,7 @@ export function setupSocketHandlers(httpServer: HttpServer) {
             credentials: true,
         },
         transports: ['websocket'],
-        pingTimeout: 60000,
+        pingTimeout: 10000,
         pingInterval: 25000,
     });
 
