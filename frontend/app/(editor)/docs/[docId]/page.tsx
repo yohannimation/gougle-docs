@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { useDocument } from '@/hooks/useDocument';
 import { useDocumentNameUpdateForm } from '@/hooks/useDocumentNameUpdateForm';
 import { useTiptapCollaboration } from '@/hooks/useTiptapCollaboration';
+import { useToast } from '@/hooks/useToast';
 
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCaret from '@tiptap/extension-collaboration-caret';
+import { CharacterCount } from '@tiptap/extensions';
 import Highlight from '@tiptap/extension-highlight';
 import { ListKit } from '@tiptap/extension-list';
 import StarterKit from '@tiptap/starter-kit';
@@ -56,12 +58,19 @@ function getRandomLightColor(): string {
 
 export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
+    const characterLimit = 32768;
+
+    const warningShownRef = useRef(false);
+    const errorShownRef = useRef(false);
 
     // Loading document data (name, content, etc.)
     const { document, isLoading, error, updateDocument } = useDocument(
         docId,
         true
     );
+
+    // Toast notification
+    const toast = useToast();
 
     const username = useMemo(() => getRandomAnimal(), []);
     const userColor = useMemo(() => getRandomLightColor(), []);
@@ -80,6 +89,9 @@ export default function DocsEditor() {
         {
             editable: false,
             extensions: [
+                CharacterCount.configure({
+                    limit: characterLimit,
+                }),
                 StarterKit.configure({ undoRedo: false }),
                 Highlight,
                 ListKit,
@@ -146,6 +158,52 @@ export default function DocsEditor() {
             };
         },
     });
+
+    // Toast utils
+    useEffect(() => {
+        if (!editor) return;
+
+        let timer;
+
+        const checkLimit = () => {
+            const count = editor.storage.characterCount.characters();
+
+            // Error (limit reached)
+            if (count >= characterLimit && !errorShownRef.current) {
+                toast.error(`Character limit reached: ${characterLimit}`);
+                errorShownRef.current = true;
+            }
+
+            // Warning (80%)
+            else if (
+                count >= characterLimit * 0.8 &&
+                !warningShownRef.current
+            ) {
+                toast.warning(
+                    `80% character limit reached: ${count}/${characterLimit}`
+                );
+                warningShownRef.current = true;
+            }
+
+            // Reset if char count below 75%
+            if (count < characterLimit * 0.75) {
+                warningShownRef.current = false;
+                errorShownRef.current = false;
+            }
+        };
+
+        const onUpdate = () => {
+            clearTimeout(timer);
+            timer = setTimeout(checkLimit, 500); // Debounce 500ms
+        };
+
+        editor.on('update', onUpdate);
+
+        return () => {
+            editor.off('update', onUpdate);
+            clearTimeout(timer);
+        };
+    }, [editor, characterLimit]);
 
     const formik = useDocumentNameUpdateForm(
         document?.name ?? '',
