@@ -202,7 +202,7 @@ button {
     }
 
     p {
-        margin-bottom: 0.4rem;
+        margin: 0.4rem 0;
         font-size: clamp(0.8rem, 1.6vw, 0.9);
         line-height: 1.4;
         font-weight: 400;
@@ -218,10 +218,37 @@ button {
     ol {
         padding-left: 1rem;
         list-style: revert;
+
+        &[data-type='taskList'] {
+            padding-left: 0;
+            list-style: none;
+
+            > li {
+                display: flex;
+                gap: 0.5rem;
+
+                label {
+                    cursor: pointer;
+
+                    > * {
+                        cursor: pointer;
+                    }
+                }
+
+                &[data-checked='true'] {
+                    opacity: 0.6;
+                    text-decoration: line-through;
+                }
+            }
+        }
     }
 
     ol ol {
         list-style: lower-latin;
+    }
+
+    li {
+        height: 1.4rem;
     }
 
     /* Placeholder (at the top) */

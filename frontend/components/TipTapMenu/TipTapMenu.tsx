@@ -10,6 +10,7 @@ import {
     List,
     ListOrdered,
     Redo,
+    SquareCheck,
     Strikethrough,
     TextAlignCenter,
     TextAlignEnd,
@@ -168,6 +169,18 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     disabled={!editable}
                 >
                     <ListOrdered /> Ordered
+                </Button>
+                <Button
+                    variant={
+                        editor.isActive('taskList') ? 'default' : 'outline'
+                    }
+                    size="sm"
+                    onClick={() =>
+                        editor.chain().focus().toggleTaskList().run()
+                    }
+                    disabled={!editable}
+                >
+                    <SquareCheck /> Checkbox
                 </Button>
             </ButtonGroup>
 

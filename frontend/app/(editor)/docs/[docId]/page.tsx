@@ -150,6 +150,7 @@ export default function DocsEditor() {
                 isActiveStrike: editor.isActive('strike'),
                 isActiveBulletList: editor.isActive('bulletList'),
                 isActiveOrderedList: editor.isActive('orderedList'),
+                isActiveTaskList: editor.isActive('taskList'),
                 isActiveHighlight: editor.isActive('highlight'),
                 isActiveLeft: editor.isActive({ textAlign: 'left' }),
                 isActiveCenter: editor.isActive({ textAlign: 'center' }),
