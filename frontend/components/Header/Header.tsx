@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -8,7 +9,17 @@ import { EarthIcon, Github, File } from 'lucide-react';
 export default function Header() {
     return (
         <header className="sticky top-0 z-10 backdrop-blur-xl backdrop-grayscale-50 flex justify-between items-center py-4 px-10 border-b-1">
-            <Link href="/" title="Home page">
+            <Link
+                href="/"
+                title="Home page"
+                className="flex items-center gap-3"
+            >
+                <Image
+                    src={'/gougle-docs-logo.svg'}
+                    alt="app logo"
+                    height={18}
+                    width={18}
+                />{' '}
                 Gougle doc
             </Link>
             <div className="flex items-end gap-2">
