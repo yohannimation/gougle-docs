@@ -28,7 +28,7 @@ export default function FormDocumentNameUpdate({
                         <span
                             className="invisible whitespace-pre p-1.5 px-2 h-9"
                             style={{
-                                fontSize: 'clamp(1.1rem, 1.3vw, 1.3rem)',
+                                fontSize: 'clamp(1.2rem, 1.4vw, 1.4rem)',
                             }}
                         >
                             {formik.values.name || 'Document name'}
@@ -66,7 +66,7 @@ export default function FormDocumentNameUpdate({
                             "
                         />
                     </div>
-                    <Pencil className="size-5 stroke-transparent group-hover:stroke-zinc-500" />
+                    <Pencil className="size-5 stroke-zinc-500 sm:stroke-transparent group-hover:stroke-zinc-500" />
                 </FieldLabel>
             </Field>
         </form>

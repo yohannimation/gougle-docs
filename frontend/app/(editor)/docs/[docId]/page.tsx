@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { useDocument } from '@/hooks/useDocument';
@@ -21,15 +20,11 @@ import { Editor } from '@tiptap/react';
 
 import { Button } from '@/components/ui/button';
 
-import ConnectionBadge from '@/components/ConnectionBadge/ConnectionBadge';
-import FormDocumentNameUpdate from '@/components/Forms/FormDocumentNameUpdate/FormDocumentNameUpdate';
 import Loader from '@/components/Loader/Loader';
-import UsersGroup from '@/components/UsersGroup/UsersGroup';
+import TipTapHeader from '@/components/TipTapHeader/TipTapHeader';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
 import animals from '@/data/animals.json';
-
-import { ArrowLeft } from 'lucide-react';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
 
@@ -232,31 +227,14 @@ export default function DocsEditor() {
 
     return (
         <>
-            <div className="group flex items-center justify-between gap-3 mb-3 mb-2">
-                <div className="flex items-center gap-5">
-                    <Link href="/docs">
-                        <Button>
-                            <ArrowLeft /> Back
-                        </Button>
-                    </Link>
-                    <FormDocumentNameUpdate formik={formik} />
-                </div>
-                <div className="flex items-center gap-3">
-                    <ConnectionBadge status={connectionStatus} />
-                    <UsersGroup users={users} />
-                </div>
-            </div>
-            <div className="flex flex-col sm:flex-col-reverse gap-3 flex-1 min-h-0">
+            <TipTapHeader
+                formik={formik}
+                connectionStatus={connectionStatus}
+                users={users}
+            />
+            <div className="flex flex-col gap-3 flex-1 min-h-0">
                 {editor && (
                     <>
-                        {isLoading && !document ? (
-                            <Loader />
-                        ) : (
-                            <EditorContent
-                                editor={editor}
-                                className="flex-1 min-h-0"
-                            />
-                        )}
                         <TipTapMenu
                             editor={editor}
                             editable={
@@ -267,6 +245,14 @@ export default function DocsEditor() {
                                 false
                             }
                         />
+                        {isLoading && !document ? (
+                            <Loader />
+                        ) : (
+                            <EditorContent
+                                editor={editor}
+                                className="flex-1 min-h-0"
+                            />
+                        )}
                     </>
                 )}
             </div>
