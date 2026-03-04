@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { useDocument } from '@/hooks/useDocument';
 import { useDocumentNameUpdateForm } from '@/hooks/useDocumentNameUpdateForm';
@@ -246,9 +246,17 @@ export default function DocsEditor() {
                     <UsersGroup users={users} />
                 </div>
             </div>
-            <div className="flex flex-col gap-3 flex-1 min-h-0">
+            <div className="flex flex-col sm:flex-col-reverse gap-3 flex-1 min-h-0">
                 {editor && (
                     <>
+                        {isLoading && !document ? (
+                            <Loader />
+                        ) : (
+                            <EditorContent
+                                editor={editor}
+                                className="flex-1 min-h-0"
+                            />
+                        )}
                         <TipTapMenu
                             editor={editor}
                             editable={
@@ -259,14 +267,6 @@ export default function DocsEditor() {
                                 false
                             }
                         />
-                        {isLoading && !document ? (
-                            <Loader />
-                        ) : (
-                            <EditorContent
-                                editor={editor}
-                                className="flex-1 min-h-0"
-                            />
-                        )}
                     </>
                 )}
             </div>
