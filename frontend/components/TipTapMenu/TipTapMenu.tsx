@@ -2,14 +2,6 @@ import { useMemo } from 'react';
 
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Button } from '@/components/ui/button';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 
 import { Editor } from '@tiptap/react';
 
@@ -17,9 +9,13 @@ import {
     Bold,
     Highlighter,
     Italic,
+    Heading1,
+    Heading2,
+    Heading3,
     LayoutList,
     List,
     ListOrdered,
+    Pilcrow,
     Redo,
     Strikethrough,
     TextAlignCenter,
@@ -69,36 +65,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                 </Button>
             </ButtonGroup>
 
-            <Select
-                value={activeBlock}
-                onValueChange={(value) => {
-                    if (value === 'paragraph') {
-                        editor.chain().focus().setParagraph().run();
-                    } else {
-                        editor
-                            .chain()
-                            .focus()
-                            .toggleHeading({
-                                level: Number(value[1]) as 1 | 2 | 3,
-                            })
-                            .run();
-                    }
-                }}
-            >
-                <SelectTrigger className="w-full max-w-48 sm:hidden" size="sm">
-                    <SelectValue placeholder="Paragraph" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                        <SelectItem value="h1">Title 1</SelectItem>
-                        <SelectItem value="h2">Title 2</SelectItem>
-                        <SelectItem value="h3">Title 3</SelectItem>
-                        <SelectItem value="p">Paragraph</SelectItem>
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-
-            <ButtonGroup className="hidden sm:block">
+            <ButtonGroup>
                 <Button
                     variant={
                         editor.isActive('heading', { level: 1 })
@@ -111,7 +78,8 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    Title 1
+                    <Heading1 />{' '}
+                    <span className="hidden xl:block">Title 1</span>
                 </Button>
                 <Button
                     variant={
@@ -125,7 +93,8 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    Title 2
+                    <Heading2 />{' '}
+                    <span className="hidden xl:block">Title 2</span>
                 </Button>
                 <Button
                     variant={
@@ -139,7 +108,8 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     }
                     disabled={!editable}
                 >
-                    Title 3
+                    <Heading3 />{' '}
+                    <span className="hidden xl:block">Title 3</span>
                 </Button>
                 <Button
                     variant={
@@ -149,7 +119,8 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     onClick={() => editor.chain().focus().setParagraph().run()}
                     disabled={!editable}
                 >
-                    Paragraph
+                    <Pilcrow />{' '}
+                    <span className="hidden xl:block">Paragraph</span>
                 </Button>
             </ButtonGroup>
 

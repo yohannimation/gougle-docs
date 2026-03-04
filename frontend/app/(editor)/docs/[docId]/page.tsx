@@ -227,24 +227,26 @@ export default function DocsEditor() {
 
     return (
         <>
-            <TipTapHeader
-                formik={formik}
-                connectionStatus={connectionStatus}
-                users={users}
-            />
+            <div className="group mb-3 mb-2">
+                <TipTapHeader
+                    formik={formik}
+                    connectionStatus={connectionStatus}
+                    users={users}
+                />
+                <TipTapMenu
+                    editor={editor}
+                    editable={
+                        (!isLoading &&
+                            connectionStatus === 'connected' &&
+                            document?.isEditable &&
+                            !error) ||
+                        false
+                    }
+                />
+            </div>
             <div className="flex flex-col gap-3 flex-1 min-h-0">
                 {editor && (
                     <>
-                        <TipTapMenu
-                            editor={editor}
-                            editable={
-                                (!isLoading &&
-                                    connectionStatus === 'connected' &&
-                                    document?.isEditable &&
-                                    !error) ||
-                                false
-                            }
-                        />
                         {isLoading && !document ? (
                             <Loader />
                         ) : (
