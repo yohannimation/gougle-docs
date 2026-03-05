@@ -112,7 +112,7 @@ export default function DocsEditor() {
             injectCSS: false,
             editorProps: {
                 attributes: {
-                    class: 'h-full overflow-y-auto border rounded-md bg-slate-50 py-2 px-3',
+                    class: 'h-full overflow-y-auto border border-blue-200 rounded-xl bg-white py-2 px-3 shadow-lg ',
                 },
             },
         },

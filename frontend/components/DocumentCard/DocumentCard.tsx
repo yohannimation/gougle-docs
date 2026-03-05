@@ -41,13 +41,13 @@ export default function DocumentCard({
     );
 
     return (
-        <Card className="relative mx-auto w-full max-w-sm gap-3">
+        <Card className="relative mx-auto w-full max-w-sm gap-1 shadow-sm">
             <CardHeader>
-                <CardTitle className="overflow-hidden text-ellipsis">
+                <CardTitle className="overflow-hidden text-ellipsis text-nowrap text-2xl">
                     {document.name}
                 </CardTitle>
             </CardHeader>
-            <CardFooter className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <CardFooter className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {cardFooter}
             </CardFooter>
         </Card>

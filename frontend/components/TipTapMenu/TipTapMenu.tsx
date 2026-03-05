@@ -45,10 +45,10 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
     }
 
     return (
-        <div className="flex gap-y-1.5 gap-x-3 md:gap-3 sm:flex-wrap pb-3 sm:pb-0 overflow-y-scroll">
-            <ButtonGroup>
+        <div className="flex gap-1.5 sm:flex-wrap p-2 bg-blue-50 border border-blue-200 rounded-xl shadow-lg overflow-y-scroll">
+            <ButtonGroup className="rounded-lg">
                 <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => editor.chain().focus().undo().run()}
                     disabled={!editable}
@@ -56,7 +56,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     <Undo />
                 </Button>
                 <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => editor.chain().focus().redo().run()}
                     disabled={!editable}
@@ -65,12 +65,12 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                 </Button>
             </ButtonGroup>
 
-            <ButtonGroup>
+            <ButtonGroup className="rounded-lg">
                 <Button
                     variant={
                         editor.isActive('heading', { level: 1 })
                             ? 'default'
-                            : 'outline'
+                            : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -85,7 +85,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     variant={
                         editor.isActive('heading', { level: 2 })
                             ? 'default'
-                            : 'outline'
+                            : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -100,7 +100,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     variant={
                         editor.isActive('heading', { level: 3 })
                             ? 'default'
-                            : 'outline'
+                            : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -112,9 +112,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     <span className="hidden xl:block">Title 3</span>
                 </Button>
                 <Button
-                    variant={
-                        editor.isActive('paragraph') ? 'default' : 'outline'
-                    }
+                    variant={editor.isActive('paragraph') ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => editor.chain().focus().setParagraph().run()}
                     disabled={!editable}
@@ -124,9 +122,9 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                 </Button>
             </ButtonGroup>
 
-            <ButtonGroup>
+            <ButtonGroup className="rounded-lg">
                 <Button
-                    variant={editor.isActive('bold') ? 'default' : 'outline'}
+                    variant={editor.isActive('bold') ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => editor.chain().focus().toggleBold().run()}
                     disabled={!editable}
@@ -134,7 +132,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     <Bold />
                 </Button>
                 <Button
-                    variant={editor.isActive('italic') ? 'default' : 'outline'}
+                    variant={editor.isActive('italic') ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                     disabled={!editable}
@@ -142,9 +140,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     <Italic />
                 </Button>
                 <Button
-                    variant={
-                        editor.isActive('underline') ? 'default' : 'outline'
-                    }
+                    variant={editor.isActive('underline') ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().toggleUnderline().run()
@@ -154,7 +150,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     <Underline />
                 </Button>
                 <Button
-                    variant={editor.isActive('strike') ? 'default' : 'outline'}
+                    variant={editor.isActive('strike') ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => editor.chain().focus().toggleStrike().run()}
                     disabled={!editable}
@@ -162,9 +158,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     <Strikethrough />
                 </Button>
                 <Button
-                    variant={
-                        editor.isActive('highlight') ? 'default' : 'outline'
-                    }
+                    variant={editor.isActive('highlight') ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().toggleHighlight().run()
@@ -175,10 +169,10 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                 </Button>
             </ButtonGroup>
 
-            <ButtonGroup>
+            <ButtonGroup className="rounded-lg">
                 <Button
                     variant={
-                        editor.isActive('bulletList') ? 'default' : 'outline'
+                        editor.isActive('bulletList') ? 'default' : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -190,7 +184,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                 </Button>
                 <Button
                     variant={
-                        editor.isActive('orderedList') ? 'default' : 'outline'
+                        editor.isActive('orderedList') ? 'default' : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -202,9 +196,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     <span className="hidden sm:block">Ordered</span>
                 </Button>
                 <Button
-                    variant={
-                        editor.isActive('taskList') ? 'default' : 'outline'
-                    }
+                    variant={editor.isActive('taskList') ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() =>
                         editor.chain().focus().toggleTaskList().run()
@@ -216,12 +208,12 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                 </Button>
             </ButtonGroup>
 
-            <ButtonGroup>
+            <ButtonGroup className="rounded-lg">
                 <Button
                     variant={
                         editor.isActive({ textAlign: 'left' })
                             ? 'default'
-                            : 'outline'
+                            : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -235,7 +227,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     variant={
                         editor.isActive({ textAlign: 'center' })
                             ? 'default'
-                            : 'outline'
+                            : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -249,7 +241,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     variant={
                         editor.isActive({ textAlign: 'right' })
                             ? 'default'
-                            : 'outline'
+                            : 'ghost'
                     }
                     size="sm"
                     onClick={() =>
@@ -263,7 +255,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     variant={
                         editor.isActive({ textAlign: 'justify' })
                             ? 'default'
-                            : 'outline'
+                            : 'ghost'
                     }
                     size="sm"
                     onClick={() =>

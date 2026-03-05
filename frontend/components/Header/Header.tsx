@@ -8,11 +8,11 @@ import { EarthIcon, Github, File } from 'lucide-react';
 
 export default function Header() {
     return (
-        <header className="sticky top-0 z-10 backdrop-blur-xl backdrop-grayscale-50 flex justify-between items-center py-4 px-10 border-b-1">
+        <header className="sticky top-0 z-10 backdrop-blur-xl backdrop-grayscale-50 flex justify-between items-center py-4 px-10 border-b-1 shadow-sm">
             <Link
                 href="/"
                 title="Home page"
-                className="flex items-center gap-3"
+                className="flex items-center gap-3 font-(family-name:--font-lexend) text-xl"
             >
                 <Image
                     src={'/gougle-docs-logo.svg'}
@@ -20,9 +20,9 @@ export default function Header() {
                     height={18}
                     width={18}
                 />{' '}
-                Gougle doc
+                Gougle docs
             </Link>
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-3">
                 <Link
                     href="/docs"
                     className="flex items-center gap-2"
@@ -34,7 +34,7 @@ export default function Header() {
                     </Button>
                 </Link>
 
-                <ButtonGroup>
+                <ButtonGroup className="rounded-xl">
                     <Button size="icon" variant="outline" title="My GitHub">
                         <Link
                             href="https://github.com/yohannimation"

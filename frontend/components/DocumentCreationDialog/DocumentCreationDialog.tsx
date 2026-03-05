@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
+    DialogClose,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -80,12 +81,15 @@ export default function DocumentCreationDialog({
                 </TooltipContent>
             </Tooltip>
 
-            <DialogContent className="max-w-lg">
+            <DialogContent showCloseButton={false} className="max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Create new document</DialogTitle>
+                    <DialogTitle>New document</DialogTitle>
                 </DialogHeader>
                 <FormDocumentCreation formik={formik} />
                 <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="outline">Close</Button>
+                    </DialogClose>
                     <Button onClick={() => formik.handleSubmit()}>
                         <Plus /> Create
                     </Button>

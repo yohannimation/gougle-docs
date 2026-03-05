@@ -24,6 +24,7 @@ export default function FormDocumentCreation({
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     aria-invalid={!!formik.errors.name || undefined}
+                    className="rounded-xl"
                 />
                 <FieldDescription>{formik.errors.name}</FieldDescription>
             </Field>

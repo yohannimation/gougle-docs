@@ -77,7 +77,7 @@ export default function DocumentPreviewCard({
     }
 
     const dialogFooter = (
-        <DialogFooter className="grid grid-cols-2 gap-2">
+        <DialogFooter className="grid grid-cols-2 gap-3">
             {!isLoading && document && document.isEditable && (
                 <>
                     <Link href={`/docs/${document.id}`} target="_blank">
@@ -98,15 +98,15 @@ export default function DocumentPreviewCard({
         <Dialog>
             <DialogTrigger asChild>
                 <Button
-                    className="w-full bg-slate-200 text-slate-700 hover:bg-slate-500 hover:text-white"
+                    className="col-span-2 sm:col-span-1 bg-slate-200 text-slate-700 hover:bg-slate-500 hover:text-white"
                     onClick={(e) => fetchDocument()}
                 >
                     <Eye /> Preview
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="flex flex-col gap-3 bg-gray-100">
                 {dialogHeader}
-                <div className="no-scrollbar h-[70dvh] overflow-y-auto border rounded-md bg-slate-50 py-2 px-3">
+                <div className="no-scrollbar h-[70dvh] overflow-y-auto py-2 border rounded-xl bg-white py-2 px-3">
                     {dialogContent}
                 </div>
                 {dialogFooter}

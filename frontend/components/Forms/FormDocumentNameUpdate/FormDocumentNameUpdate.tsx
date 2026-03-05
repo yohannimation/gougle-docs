@@ -26,7 +26,7 @@ export default function FormDocumentNameUpdate({
                     <div className="relative inline-grid max-w-30 md:max-w-80">
                         {/* Mirror */}
                         <span
-                            className="invisible whitespace-pre p-1.5 px-2 h-9"
+                            className="invisible whitespace-pre p-1.5 px-2.75 h-9"
                             style={{
                                 fontSize: 'clamp(1.2rem, 1.4vw, 1.4rem)',
                             }}
@@ -49,16 +49,15 @@ export default function FormDocumentNameUpdate({
                                 absolute inset-0 w-full
                                 overflow-hidden text-ellipsis
 
-                                h-9 p-1.5 font-semibold
+                                h-9 p-1.5 px-2.5 font-semibold
 
                                 border-transparent
                                 shadow-none
                                 bg-transparent
+                                rounded-xl
 
                                 hover:border-input
-                                focus-visible:border-ring
-                                focus-visible:ring-ring/50
-                                focus-visible:ring-[3px]
+                                hover:border-blue-200
 
                                 aria-invalid:border-destructive
 

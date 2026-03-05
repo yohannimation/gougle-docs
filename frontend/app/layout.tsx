@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Lexend } from 'next/font/google';
 import './globals.css';
 
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -12,6 +12,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
     variable: '--font-geist-mono',
+    subsets: ['latin'],
+});
+
+const lexend = Lexend({
+    variable: '--font-lexend',
     subsets: ['latin'],
 });
 
@@ -28,7 +33,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh flex flex-col`}
+                className={`${geistSans.variable} ${geistMono.variable} ${lexend.variable} antialiased h-dvh flex flex-col`}
             >
                 <TooltipProvider>
                     {children}

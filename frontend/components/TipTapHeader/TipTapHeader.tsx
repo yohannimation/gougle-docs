@@ -30,7 +30,7 @@ export default function TipTapHeader({
     return (
         <>
             <div className="flex items-center justify-between gap-3 mb-2">
-                <div className="flex items-center gap-5">
+                <div className="flex items-center gap-3">
                     <Link href="/docs">
                         <Button variant="ghost">
                             <ArrowLeft />{' '}
