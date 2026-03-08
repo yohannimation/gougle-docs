@@ -39,9 +39,12 @@ export default function TipTapHeader({
                     </Link>
                     <FormDocumentNameUpdate formik={formik} />
                 </div>
-                <div className="flex items-center gap-3">
-                    <ConnectionBadge status={connectionStatus} />
-                    <UsersGroup users={users} />
+                <div>
+                    {connectionStatus !== 'connected' ? (
+                        <ConnectionBadge status={connectionStatus} />
+                    ) : (
+                        <UsersGroup users={users} />
+                    )}
                 </div>
             </div>
         </>

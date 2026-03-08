@@ -1,3 +1,5 @@
+import { useToast } from '@/hooks/useToast';
+
 import {
     Avatar,
     AvatarFallback,
@@ -5,6 +7,8 @@ import {
     AvatarGroupCount,
     AvatarImage,
 } from '../ui/avatar';
+
+import { UserPlus } from 'lucide-react';
 
 interface User {
     username: string;
@@ -16,7 +20,15 @@ interface UsersGroupProps {
 }
 
 export default function UsersGroup({ users }: UsersGroupProps) {
+    const toast = useToast();
+
     if (!users) return;
+
+    const copyCurrentUrl = () => {
+        navigator.clipboard.writeText(window.location.href);
+
+        toast.info('URL copied in clipboard');
+    };
 
     return (
         <AvatarGroup>
@@ -32,8 +44,17 @@ export default function UsersGroup({ users }: UsersGroupProps) {
                 </Avatar>
             ))}
             {users.length > 3 && (
-                <AvatarGroupCount>{users.length}</AvatarGroupCount>
+                <AvatarGroupCount className="me-1">
+                    +{users.length - 3}
+                </AvatarGroupCount>
             )}
+            <AvatarGroupCount
+                onClick={copyCurrentUrl}
+                className="bg-blue-100 border border-blue-200 cursor-pointer"
+                title="Invite user"
+            >
+                <UserPlus />
+            </AvatarGroupCount>
         </AvatarGroup>
     );
 }
