@@ -32,14 +32,6 @@ interface TipTapMenuProps {
 }
 
 export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
-    const activeBlock = useMemo(() => {
-        if (!editor) return 'p';
-        if (editor.isActive('heading', { level: 1 })) return 'h1';
-        if (editor.isActive('heading', { level: 2 })) return 'h2';
-        if (editor.isActive('heading', { level: 3 })) return 'h3';
-        return 'p';
-    }, [editor, editor?.state]);
-
     if (!editor) {
         return null;
     }
@@ -51,7 +43,9 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => editor.chain().focus().undo().run()}
-                    disabled={!editable}
+                    disabled={
+                        !editable || !editor.can().chain().focus().undo().run()
+                    }
                 >
                     <Undo />
                 </Button>
@@ -59,7 +53,9 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => editor.chain().focus().redo().run()}
-                    disabled={!editable}
+                    disabled={
+                        !editable || !editor.can().chain().focus().redo().run()
+                    }
                 >
                     <Redo />
                 </Button>

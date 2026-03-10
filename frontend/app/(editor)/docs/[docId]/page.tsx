@@ -135,6 +135,8 @@ export default function DocsEditor() {
             if (!editor) return null;
 
             return {
+                canUndo: editor.can().chain().focus().undo().run(),
+                canRedo: editor.can().chain().focus().redo().run(),
                 isActiveHeading1: editor.isActive('heading', { level: 1 }),
                 isActiveHeading2: editor.isActive('heading', { level: 2 }),
                 isActiveHeading3: editor.isActive('heading', { level: 3 }),
