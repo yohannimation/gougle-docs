@@ -20,7 +20,7 @@ export default function Header() {
                     height={18}
                     width={18}
                 />{' '}
-                Gougle docs
+                Gougle Docs
             </Link>
             <div className="flex items-end gap-3">
                 <Link

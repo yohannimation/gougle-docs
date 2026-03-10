@@ -21,7 +21,7 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-    title: 'Gougle docs',
+    title: 'Gougle Docs',
     description: 'A cooperative editor like Google Docs',
 };
 
