@@ -15,6 +15,7 @@ import {
     LayoutList,
     List,
     ListOrdered,
+    Minus,
     Pilcrow,
     Redo,
     Strikethrough,
@@ -162,6 +163,21 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     disabled={!editable}
                 >
                     <Highlighter />
+                </Button>
+            </ButtonGroup>
+
+            <ButtonGroup className="rounded-lg">
+                <Button
+                    variant={
+                        editor.isActive('horizontalRule') ? 'default' : 'ghost'
+                    }
+                    size="sm"
+                    onClick={() =>
+                        editor.chain().focus().setHorizontalRule().run()
+                    }
+                    disabled={!editable}
+                >
+                    <Minus />
                 </Button>
             </ButtonGroup>
 

@@ -149,6 +149,7 @@ export default function DocsEditor() {
                 isActiveOrderedList: editor.isActive('orderedList'),
                 isActiveTaskList: editor.isActive('taskList'),
                 isActiveHighlight: editor.isActive('highlight'),
+                isActiveHorizontalRule: editor.isActive('horizontalRule'),
                 isActiveLeft: editor.isActive({ textAlign: 'left' }),
                 isActiveCenter: editor.isActive({ textAlign: 'center' }),
                 isActiveRight: editor.isActive({ textAlign: 'right' }),
