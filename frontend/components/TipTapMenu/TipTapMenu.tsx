@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import {
     Heading2,
     Heading3,
     LayoutList,
+    Link2,
     List,
     ListOrdered,
     Minus,
@@ -33,6 +34,35 @@ interface TipTapMenuProps {
 }
 
 export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
+    const setLink = useCallback(() => {
+        const previousUrl = editor.getAttributes('link').href;
+        const url = window.prompt('URL', previousUrl);
+
+        // cancelled
+        if (url === null) {
+            return;
+        }
+
+        // empty
+        if (url === '') {
+            editor.chain().focus().extendMarkRange('link').unsetLink().run();
+
+            return;
+        }
+
+        // update link
+        try {
+            editor
+                .chain()
+                .focus()
+                .extendMarkRange('link')
+                .setLink({ href: url, title: 'grebgehgbejhr' })
+                .run();
+        } catch (e) {
+            alert(e.message);
+        }
+    }, [editor]);
+
     if (!editor) {
         return null;
     }
@@ -167,6 +197,14 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
             </ButtonGroup>
 
             <ButtonGroup className="rounded-lg">
+                <Button
+                    variant={editor.isActive('link') ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setLink()}
+                    disabled={!editable}
+                >
+                    <Link2 />
+                </Button>
                 <Button
                     variant={
                         editor.isActive('horizontalRule') ? 'default' : 'ghost'

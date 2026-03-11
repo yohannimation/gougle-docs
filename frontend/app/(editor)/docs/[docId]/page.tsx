@@ -21,6 +21,7 @@ import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
 
 import Loader from '@/components/Loader/Loader';
+import TipTapBubbleMenu from '@/components/TipTapBubbleMenu/TipTapBubbleMenu';
 import TipTapHeader from '@/components/TipTapHeader/TipTapHeader';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
@@ -87,7 +88,75 @@ export default function DocsEditor() {
                 CharacterCount.configure({
                     limit: characterLimit,
                 }),
-                StarterKit.configure({ undoRedo: false }),
+                StarterKit.configure({
+                    undoRedo: false,
+                    link: {
+                        openOnClick: false,
+                        autolink: true,
+                        defaultProtocol: 'https',
+                        protocols: ['http', 'https'],
+                        isAllowedUri: (url, ctx) => {
+                            try {
+                                // construct URL
+                                const parsedUrl = url.includes(':')
+                                    ? new URL(url)
+                                    : new URL(
+                                          `${ctx.defaultProtocol}://${url}`
+                                      );
+
+                                // use default validation
+                                if (!ctx.defaultValidate(parsedUrl.href)) {
+                                    return false;
+                                }
+
+                                // disallowed protocols
+                                const disallowedProtocols = [
+                                    'ftp',
+                                    'file',
+                                    'mailto',
+                                ];
+                                const protocol = parsedUrl.protocol.replace(
+                                    ':',
+                                    ''
+                                );
+
+                                if (disallowedProtocols.includes(protocol)) {
+                                    return false;
+                                }
+
+                                // only allow protocols specified in ctx.protocols
+                                const allowedProtocols = ctx.protocols.map(
+                                    (p) =>
+                                        typeof p === 'string' ? p : p.scheme
+                                );
+
+                                if (!allowedProtocols.includes(protocol)) {
+                                    return false;
+                                }
+
+                                return true;
+                            } catch {
+                                return false;
+                            }
+                        },
+                        shouldAutoLink: (url) => {
+                            try {
+                                // construct URL
+                                const parsedUrl = url.includes(':')
+                                    ? new URL(url)
+                                    : new URL(`https://${url}`);
+
+                                // only auto-link if the domain is not in the disallowed list
+                                const disallowedDomains = [];
+                                const domain = parsedUrl.hostname;
+
+                                return !disallowedDomains.includes(domain);
+                            } catch {
+                                return false;
+                            }
+                        },
+                    },
+                }),
                 Highlight,
                 ListKit,
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
@@ -137,13 +206,14 @@ export default function DocsEditor() {
             return {
                 canUndo: editor.can().chain().focus().undo().run(),
                 canRedo: editor.can().chain().focus().redo().run(),
+                isActiveLink: editor.isActive('link'),
                 isActiveHeading1: editor.isActive('heading', { level: 1 }),
                 isActiveHeading2: editor.isActive('heading', { level: 2 }),
                 isActiveHeading3: editor.isActive('heading', { level: 3 }),
                 isActiveParagraph: editor.isActive('paragraph'),
                 isActiveBold: editor.isActive('bold'),
                 isActiveItalic: editor.isActive('italic'),
-                isActiveUderline: editor.isActive('underline'),
+                isActiveUnderline: editor.isActive('underline'),
                 isActiveStrike: editor.isActive('strike'),
                 isActiveBulletList: editor.isActive('bulletList'),
                 isActiveOrderedList: editor.isActive('orderedList'),
@@ -247,6 +317,16 @@ export default function DocsEditor() {
                     }
                 />
             </div>
+            <TipTapBubbleMenu
+                editor={editor}
+                editable={
+                    (!isLoading &&
+                        connectionStatus === 'connected' &&
+                        document?.isEditable &&
+                        !error) ||
+                    false
+                }
+            />
             <div className="flex flex-col gap-3 flex-1 min-h-0">
                 {editor && (
                     <>

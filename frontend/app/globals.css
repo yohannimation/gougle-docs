@@ -245,6 +245,12 @@ button {
         }
     }
 
+    a {
+        color: #2b7fff;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
     p {
         margin: 0.4rem 0;
         font-size: clamp(0.8rem, 1.6vw, 0.9);
