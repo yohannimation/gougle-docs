@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import documentService from '../services/documents.service';
 
+import { validate as isValidUUID } from 'uuid';
+
 interface DocumentParams {
     id: string;
 }
@@ -22,6 +24,13 @@ export class DocumentController {
     ) {
         try {
             const { id } = req.params;
+
+            if (!isValidUUID(id)) {
+                return res.status(400).json({
+                    error: 'Invalid document ID format. Expected UUID.',
+                });
+            }
+
             const document = await documentService.findById(id);
 
             if (!document) {
@@ -79,6 +88,12 @@ export class DocumentController {
             const { id } = req.params;
             const { name, isEditable, content } = req.body;
 
+            if (!isValidUUID(id)) {
+                return res.status(400).json({
+                    error: 'Invalid document ID format. Expected UUID.',
+                });
+            }
+
             // Name verification
             if (name !== undefined) {
                 if (typeof name !== 'string') {
@@ -128,6 +143,13 @@ export class DocumentController {
     ) {
         try {
             const { id } = req.params;
+
+            if (!isValidUUID(id)) {
+                return res.status(400).json({
+                    error: 'Invalid document ID format. Expected UUID.',
+                });
+            }
+
             await documentService.delete(id);
             res.status(204).send();
         } catch (error) {

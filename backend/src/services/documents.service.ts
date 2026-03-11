@@ -7,6 +7,8 @@ import {
 import * as Y from 'yjs';
 import { yXmlFragmentToProsemirrorJSON } from 'y-prosemirror';
 
+import { validate as isValidUUID } from 'uuid';
+
 export class DocumentService {
     // ═══════════════════════════════════════════════════════════════════════════
     // CRUD REST (used by the controllers)
@@ -72,11 +74,28 @@ export class DocumentService {
      * Used by the Socket.io handle when user join a document
      */
     async loadYDoc(id: string): Promise<Buffer | null> {
-        const doc = await prisma.document.findUnique({
-            where: { id },
-            select: { ydoc: true },
-        });
-        return (doc?.ydoc ?? null) as any;
+        if (!isValidUUID(id)) {
+            throw new Error(`Invalid document ID format: ${id}`);
+        }
+
+        try {
+            const doc = await prisma.document.findUnique({
+                where: { id },
+                select: { ydoc: true },
+            });
+
+            if (!doc) {
+                throw new Error(`Document not found: ${id}`);
+            }
+
+            return (doc.ydoc ?? null) as any;
+        } catch (err) {
+            console.error(
+                `[DocumentService] Error loading ydoc for ${id}:`,
+                err
+            );
+            throw err;
+        }
     }
 
     /**
@@ -84,15 +103,39 @@ export class DocumentService {
      * Used by the Socket.io handle after the debounce
      */
     async saveYDoc(id: string, ydocBuffer: Buffer): Promise<void> {
-        const json = this.ydocToJson(ydocBuffer);
+        if (!isValidUUID(id)) {
+            throw new Error(`Invalid document ID format: ${id}`);
+        }
+        if (!Buffer.isBuffer(ydocBuffer)) {
+            throw new Error('Invalid ydoc buffer');
+        }
+        const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+        if (ydocBuffer.length > MAX_SIZE) {
+            throw new Error(
+                `Document too large: ${ydocBuffer.length} bytes (max: ${MAX_SIZE})`
+            );
+        }
 
-        await prisma.document.update({
-            where: { id },
-            data: {
-                ydoc: ydocBuffer as any,
-                content: json,
-            },
-        });
+        try {
+            const json = this.ydocToJson(ydocBuffer);
+
+            await prisma.document.update({
+                where: { id },
+                data: {
+                    ydoc: ydocBuffer as any,
+                    content: json,
+                },
+            });
+        } catch (err) {
+            if ((err as any).code === 'P2025') {
+                throw new Error(`Document not found: ${id}`);
+            }
+            console.error(
+                `[DocumentService] Error saving ydoc for ${id}:`,
+                err
+            );
+            throw err;
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════

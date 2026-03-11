@@ -10,64 +10,144 @@ import {
     LeaveDocumentPayload,
 } from '../../types/collaboration.types';
 
+import { validate as isValidUUID } from 'uuid';
+
 // Singletons
 const stateManager = new DocumentStateManager();
 const persistenceManager = new PersistenceManager();
 const userManager = new UserManager();
 const yjsOps = new YjsOperations();
 
+const MAX_UPDATE_SIZE = 1024 * 1024;
+
 export function documentHandler(io: Server, socket: Socket): void {
     // ── Join Document ─────────────────────────────────────────────────────────
     socket.on('join-document', async (payload: JoinDocumentPayload) => {
-        const { documentId, username, userColor } = payload;
+        try {
+            const { documentId, username, userColor } = payload;
 
-        console.log(`${socket.id} (${username}) → "${documentId}"`);
+            if (!documentId || !isValidUUID(documentId)) {
+                socket.emit('error', { message: 'Invalid document ID' });
+                return;
+            }
 
-        const state = stateManager.getOrCreate(documentId);
-        userManager.addUser(state, socket.id, username, userColor);
-        socket.join(documentId);
+            console.log(`${socket.id} (${username}) → "${documentId}"`);
 
-        // Load from the DB if Y.Doc is empty
-        if (yjsOps.isEmpty(state.ydoc)) {
-            await yjsOps.loadFromDatabase(documentId, state.ydoc);
+            const state = stateManager.getOrCreate(documentId);
+            userManager.addUser(state, socket.id, username, userColor);
+            socket.join(documentId);
+
+            // Load from the DB if Y.Doc is empty
+            if (yjsOps.isEmpty(state.ydoc)) {
+                await yjsOps.loadFromDatabase(documentId, state.ydoc);
+            }
+
+            // Send the current state
+            const currentState = yjsOps.getCurrentState(state.ydoc);
+            socket.emit('document-sync', { update: currentState });
+
+            // Send the user list
+            userManager.broadcastUsers(io, documentId, state);
+        } catch (error) {
+            console.error('[Socket] Error in join-document:', error);
+            socket.emit('error', {
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : 'Failed to join document',
+            });
         }
-
-        // Send the current state
-        const currentState = yjsOps.getCurrentState(state.ydoc);
-        socket.emit('document-sync', { update: currentState });
-
-        // Send the user list
-        userManager.broadcastUsers(io, documentId, state);
     });
 
     // ── Document Update ───────────────────────────────────────────────────────
     socket.on('document-update', (payload: DocumentUpdatePayload) => {
-        const { documentId, update } = payload;
-        const state = stateManager.get(documentId);
-        if (!state) return;
+        try {
+            const { documentId, update } = payload;
 
-        yjsOps.applyUpdate(state.ydoc, update);
-        socket.to(documentId).emit('document-update', { update });
-        persistenceManager.schedule(documentId, state);
+            if (!documentId || !isValidUUID(documentId)) {
+                socket.emit('error', { message: 'Invalid document ID' });
+                return;
+            }
+            if (!Array.isArray(update)) {
+                socket.emit('error', { message: 'Invalid update format' });
+                return;
+            }
+            if (update.length > MAX_UPDATE_SIZE) {
+                socket.emit('error', { message: 'Update too large' });
+                return;
+            }
+
+            const state = stateManager.get(documentId);
+            if (!state) {
+                socket.emit('error', { message: 'Document state not found' });
+                return;
+            }
+            if (!state.clients.has(socket.id)) {
+                socket.emit('error', {
+                    message: 'Not authorized for this document',
+                });
+                return;
+            }
+
+            yjsOps.applyUpdate(state.ydoc, update);
+            socket.to(documentId).emit('document-update', { update });
+            persistenceManager.schedule(documentId, state);
+        } catch (error) {
+            console.error('[Socket] Error in document-update:', error);
+            socket.emit('error', { message: 'Failed to update document' });
+        }
     });
 
     // ── Awareness Update ──────────────────────────────────────────────────────
     socket.on('awareness-update', (payload: AwarenessUpdatePayload) => {
-        const { documentId, update } = payload;
-        socket.to(documentId).emit('awareness-update', { update });
+        try {
+            const { documentId, update } = payload;
+
+            if (!documentId || !isValidUUID(documentId)) {
+                socket.emit('error', { message: 'Invalid document ID' });
+                return;
+            }
+            if (!Array.isArray(update)) {
+                socket.emit('error', { message: 'Invalid update format' });
+                return;
+            }
+            if (update.length > MAX_UPDATE_SIZE) {
+                socket.emit('error', { message: 'Update too large' });
+                return;
+            }
+
+            socket.to(documentId).emit('awareness-update', { update });
+        } catch (error) {
+            console.error('[Socket] Error in awareness-update:', error);
+        }
     });
 
     // ── Leave Document ────────────────────────────────────────────────────────
     socket.on('leave-document', async (payload: LeaveDocumentPayload) => {
-        await handleLeave(payload.documentId, socket.id);
+        try {
+            const { documentId } = payload;
+
+            if (!documentId || !isValidUUID(documentId)) {
+                socket.emit('error', { message: 'Invalid document ID' });
+                return;
+            }
+
+            await handleLeave(documentId, socket.id);
+        } catch (error) {
+            console.error('[Socket] Error in leave-document:', error);
+        }
     });
 
     // ── Disconnect ────────────────────────────────────────────────────────────
     socket.on('disconnect', async () => {
-        for (const [documentId, state] of stateManager.entries()) {
-            if (state.clients.has(socket.id)) {
-                await handleLeave(documentId, socket.id);
+        try {
+            for (const [documentId, state] of stateManager.entries()) {
+                if (state.clients.has(socket.id)) {
+                    await handleLeave(documentId, socket.id);
+                }
             }
+        } catch (error) {
+            console.error('[Socket] Error in disconnect:', error);
         }
     });
 
