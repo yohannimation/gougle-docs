@@ -1,9 +1,9 @@
-import { useCallback } from 'react';
-
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Button } from '@/components/ui/button';
 
 import { Editor } from '@tiptap/react';
+
+import { setLink } from '@/lib/utils';
 
 import {
     Bold,
@@ -34,35 +34,6 @@ interface TipTapMenuProps {
 }
 
 export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
-    const setLink = useCallback(() => {
-        const previousUrl = editor.getAttributes('link').href;
-        const url = window.prompt('URL', previousUrl);
-
-        // cancelled
-        if (url === null) {
-            return;
-        }
-
-        // empty
-        if (url === '') {
-            editor.chain().focus().extendMarkRange('link').unsetLink().run();
-
-            return;
-        }
-
-        // update link
-        try {
-            editor
-                .chain()
-                .focus()
-                .extendMarkRange('link')
-                .setLink({ href: url, title: 'grebgehgbejhr' })
-                .run();
-        } catch (e) {
-            alert(e.message);
-        }
-    }, [editor]);
-
     if (!editor) {
         return null;
     }
@@ -200,7 +171,7 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                 <Button
                     variant={editor.isActive('link') ? 'default' : 'ghost'}
                     size="sm"
-                    onClick={() => setLink()}
+                    onClick={() => setLink(editor)}
                     disabled={!editable}
                 >
                     <Link2 />

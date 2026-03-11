@@ -7,6 +7,13 @@ import { useDocumentNameUpdateForm } from '@/hooks/useDocumentNameUpdateForm';
 import { useTiptapCollaboration } from '@/hooks/useTiptapCollaboration';
 import { useToast } from '@/hooks/useToast';
 
+import {
+    getRandomAnimal,
+    getRandomLightColor,
+    isAllowedUri,
+    shouldAutoLink,
+} from '@/lib/utils';
+
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCaret from '@tiptap/extension-collaboration-caret';
@@ -25,39 +32,11 @@ import TipTapBubbleMenu from '@/components/TipTapBubbleMenu/TipTapBubbleMenu';
 import TipTapHeader from '@/components/TipTapHeader/TipTapHeader';
 import TipTapMenu from '@/components/TipTapMenu/TipTapMenu';
 
-import animals from '@/data/animals.json';
-
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? 'ws://localhost:3001';
-
-function getRandomAnimal(): string {
-    return animals[Math.floor(Math.random() * animals.length)];
-}
-
-function getRandomLightColor(): string {
-    const hue = Math.floor(Math.random() * 360); // 0-360 : all color pallet
-    const saturation = 60 + Math.floor(Math.random() * 30); // 60-90% : vivas color but not grey too
-    let lightness = 70 + Math.floor(Math.random() * 20); // 70-90% : light color
-
-    // Conversion HSL -> RGB
-    lightness /= 100;
-    const a = (saturation * Math.min(lightness, 1 - lightness)) / 100;
-    const f = (n) => {
-        const k = (n + hue / 30) % 12;
-        const color = lightness - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-        return Math.round(255 * color)
-            .toString(16)
-            .padStart(2, '0'); // Convert to Hex and prefix "0" if needed
-    };
-
-    return `#${f(0)}${f(8)}${f(4)}`;
-}
 
 export default function DocsEditor() {
     const { docId } = useParams<{ docId: string }>();
     const characterLimit = 32768;
-
-    const warningShownRef = useRef(false);
-    const errorShownRef = useRef(false);
 
     // Loading document data (name, content, etc.)
     const { document, isLoading, error, updateDocument } = useDocument(
@@ -67,6 +46,8 @@ export default function DocsEditor() {
 
     // Toast notification
     const toast = useToast();
+    const warningShownRef = useRef(false);
+    const errorShownRef = useRef(false);
 
     const username = useMemo(() => getRandomAnimal(), []);
     const userColor = useMemo(() => getRandomLightColor(), []);
@@ -95,66 +76,8 @@ export default function DocsEditor() {
                         autolink: true,
                         defaultProtocol: 'https',
                         protocols: ['http', 'https'],
-                        isAllowedUri: (url, ctx) => {
-                            try {
-                                // construct URL
-                                const parsedUrl = url.includes(':')
-                                    ? new URL(url)
-                                    : new URL(
-                                          `${ctx.defaultProtocol}://${url}`
-                                      );
-
-                                // use default validation
-                                if (!ctx.defaultValidate(parsedUrl.href)) {
-                                    return false;
-                                }
-
-                                // disallowed protocols
-                                const disallowedProtocols = [
-                                    'ftp',
-                                    'file',
-                                    'mailto',
-                                ];
-                                const protocol = parsedUrl.protocol.replace(
-                                    ':',
-                                    ''
-                                );
-
-                                if (disallowedProtocols.includes(protocol)) {
-                                    return false;
-                                }
-
-                                // only allow protocols specified in ctx.protocols
-                                const allowedProtocols = ctx.protocols.map(
-                                    (p) =>
-                                        typeof p === 'string' ? p : p.scheme
-                                );
-
-                                if (!allowedProtocols.includes(protocol)) {
-                                    return false;
-                                }
-
-                                return true;
-                            } catch {
-                                return false;
-                            }
-                        },
-                        shouldAutoLink: (url) => {
-                            try {
-                                // construct URL
-                                const parsedUrl = url.includes(':')
-                                    ? new URL(url)
-                                    : new URL(`https://${url}`);
-
-                                // only auto-link if the domain is not in the disallowed list
-                                const disallowedDomains = [];
-                                const domain = parsedUrl.hostname;
-
-                                return !disallowedDomains.includes(domain);
-                            } catch {
-                                return false;
-                            }
-                        },
+                        isAllowedUri,
+                        shouldAutoLink,
                     },
                 }),
                 Highlight,

@@ -1,10 +1,10 @@
-import { useCallback } from 'react';
-
 import { Editor } from '@tiptap/react';
 import { BubbleMenu } from '@tiptap/react/menus';
 
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Button } from '@/components/ui/button';
+
+import { setLink } from '@/lib/utils';
 
 import { ExternalLink, Link2Off, PencilLine } from 'lucide-react';
 
@@ -17,35 +17,6 @@ export default function TipTapAnchorBubbleMenu({
     editor,
     editable,
 }: TipTapMenuProps) {
-    const setLink = useCallback(() => {
-        const previousUrl = editor.getAttributes('link').href;
-        const url = window.prompt('URL', previousUrl);
-
-        // cancelled
-        if (url === null) {
-            return;
-        }
-
-        // empty
-        if (url === '') {
-            editor.chain().focus().extendMarkRange('link').unsetLink().run();
-
-            return;
-        }
-
-        // update link
-        try {
-            editor
-                .chain()
-                .focus()
-                .extendMarkRange('link')
-                .setLink({ href: url, title: 'grebgehgbejhr' })
-                .run();
-        } catch (e) {
-            alert(e.message);
-        }
-    }, [editor]);
-
     if (!editor || !editable) {
         return null;
     }
@@ -70,7 +41,11 @@ export default function TipTapAnchorBubbleMenu({
                 >
                     <ExternalLink />
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => setLink()}>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setLink(editor)}
+                >
                     <PencilLine />
                 </Button>
                 <Button
