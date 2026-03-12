@@ -20,6 +20,7 @@ import {
     Pilcrow,
     Redo,
     Strikethrough,
+    Table,
     TextAlignCenter,
     TextAlignEnd,
     TextAlignJustify,
@@ -187,6 +188,26 @@ export default function TipTapMenu({ editor, editable }: TipTapMenuProps) {
                     disabled={!editable}
                 >
                     <Minus />
+                </Button>
+                <Button
+                    variant={
+                        editor.isActive('horizontalRule') ? 'default' : 'ghost'
+                    }
+                    size="sm"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .insertTable({
+                                rows: 3,
+                                cols: 2,
+                                withHeaderRow: true,
+                            })
+                            .run()
+                    }
+                    disabled={!editable}
+                >
+                    <Table />
                 </Button>
             </ButtonGroup>
 

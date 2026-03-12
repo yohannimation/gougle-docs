@@ -21,6 +21,7 @@ import { CharacterCount } from '@tiptap/extensions';
 import Highlight from '@tiptap/extension-highlight';
 import { ListKit } from '@tiptap/extension-list';
 import StarterKit from '@tiptap/starter-kit';
+import { TableKit } from '@tiptap/extension-table';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Editor } from '@tiptap/react';
@@ -82,6 +83,12 @@ export default function DocsEditor() {
                 }),
                 Highlight,
                 ListKit,
+                TableKit.configure({
+                    table: {
+                        renderWrapper: true,
+                        resizable: true,
+                    },
+                }),
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
                 Underline,
                 ...(ydoc && provider
