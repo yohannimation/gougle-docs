@@ -85,8 +85,8 @@ export default function DocsEditor() {
                 ListKit,
                 TableKit.configure({
                     table: {
-                        renderWrapper: true,
                         resizable: true,
+                        renderWrapper: true,
                     },
                 }),
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),

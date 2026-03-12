@@ -318,7 +318,7 @@ button {
     }
     table {
         margin: 0;
-        width: 100%;
+        min-width: 100% !important;
         border-collapse: collapse;
         overflow: hidden;
         table-layout: fixed;
