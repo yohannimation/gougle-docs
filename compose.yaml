@@ -79,4 +79,3 @@ volumes:
 
 networks:
   gougle-docs-network:
-    driver: bridge

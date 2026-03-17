@@ -55,7 +55,6 @@ volumes:
 
 networks:
   gougle-docs-network:
-    driver: bridge
   npm:
     external: true
     name: nginx-proxy-manager-stack_default
