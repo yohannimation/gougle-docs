@@ -65,7 +65,7 @@ export default function DocsEditor() {
     // Initialed only if the Ydoc is initialed
     const editor: Editor | null = useEditor(
         {
-            editable: false,
+            editable: true,
             extensions: [
                 CharacterCount.configure({
                     limit: characterLimit,
@@ -87,6 +87,7 @@ export default function DocsEditor() {
                     table: {
                         resizable: true,
                         renderWrapper: true,
+                        lastColumnResizable: false,
                     },
                 }),
                 TextAlign.configure({ types: ['heading', 'paragraph'] }),
