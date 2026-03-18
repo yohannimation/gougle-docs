@@ -9,6 +9,7 @@ import FeatureCard from '@/components/Home/FeatureCard/FeatureCard';
 import { ArrowRight } from 'lucide-react';
 
 import type { FeatureInterface } from '@/interface/Feature.interface';
+import Slider from '@/components/Home/Slider/Slider';
 
 export default function Home() {
     const features: FeatureInterface[] = [
@@ -34,6 +35,24 @@ export default function Home() {
             name: 'Table',
             description:
                 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
+        },
+    ];
+
+    const usage: FeatureInterface[] = [
+        {
+            name: 'Create',
+            description: 'description1',
+            sourceUrl: 'url',
+        },
+        {
+            name: 'Share',
+            description: 'description2',
+            sourceUrl: 'url',
+        },
+        {
+            name: 'Edit',
+            description: 'description3',
+            sourceUrl: 'url',
         },
     ];
 
@@ -78,6 +97,10 @@ export default function Home() {
                         />
                     ))}
                 </ul>
+            </section>
+            <section className="py-6 flex flex-col gap-3">
+                <h2>Simple à utiliser</h2>
+                <Slider items={usage} />
             </section>
         </>
     );
