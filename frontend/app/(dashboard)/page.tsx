@@ -15,48 +15,47 @@ export default function Home() {
     const features: FeatureInterface[] = [
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'Collaborez',
+            name: 'Collaborate',
             description:
-                "Chaque frappe est synchronisée en quelques millisecondes. Plusieurs personnes peuvent modifier le même document au même moment sans écraser le travail de l'autre",
+                "Every keystroke is synchronized within milliseconds. Multiple people can edit the same document at the same time without overwriting each other's work.",
         },
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'Formatez',
+            name: 'Format',
             description:
-                "Une expérience d'écriture et de lecture fluide : titres, gras, italique, surlignement... Tout ce dont vous avez besoin, rien de superflu.",
+                'A smooth writing and reading experience: headings, bold, italic, highlighting... Everything you need, nothing unnecessary.',
         },
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'Structurez',
+            name: 'Structure',
             description:
-                'Ajoutez un tableau en deux clics, ajustez les colonnes, ajoutez des lignes, remplissez les cellules, fusionnez des cellules, ajoutez ou supprimez des lignes à la volée',
+                'Add a table in two clicks, adjust columns, add rows, fill cells, merge cells, add or delete rows on the fly.',
         },
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'Listez',
+            name: 'List',
             description:
-                "Listes à puces, listes numérotées, cases à cocher... Organisez vos notes, vos comptes-rendus ou vos to-do lists sans quitter l'éditeur.",
+                'Bullet lists, numbered lists, checkboxes... Organize your notes, reports, or to-do lists without leaving the editor.',
         },
     ];
 
     const usage: FeatureInterface[] = [
         {
-            name: 'Créez',
+            name: 'Create',
             description:
-                'Deux clics suffisent. Votre doc est prêt en une seconde.',
-            sourceUrl: 'url',
+                'Two clicks are all it takes. Your document is ready in a second.',
+            sourceUrl: 'https://localhost:3000',
         },
         {
-            name: 'Partagez',
+            name: 'Share',
             description:
-                "Envoyez l'URL à vos collaborateurs. Pas de compte requis pour rejoindre.",
-            sourceUrl: 'url',
+                'Send the URL to your collaborators. No account required to join.',
+            sourceUrl: 'https://localhost:3000',
         },
         {
-            name: 'Editez',
-            description:
-                'Modifiez en temps réel. Les changements se synchronisent instantanément.',
-            sourceUrl: 'url',
+            name: 'Edit',
+            description: 'Edit in real time. Changes sync instantly.',
+            sourceUrl: 'https://localhost:3000',
         },
     ];
 
@@ -73,24 +72,24 @@ export default function Home() {
                 "
             >
                 <div className="flex flex-col justify-center gap-3">
-                    <h1>Rédigez ensemble</h1>
+                    <h1>Write together</h1>
                     <p>
-                        <strong>Gougle Docs</strong> est un éditeur collaboratif
-                        en temps réel.
+                        <strong>Gougle Docs</strong> is a real-time
+                        collaborative editor.
                         <br />
-                        Vos modifications apparaissent instantanément chez vos
-                        collaborateurs sans rechargement et sans conflit.
+                        Your changes appear instantly for your collaborators
+                        without reloading and without conflicts.
                     </p>
                     <Link href="/docs" className="w-fit" title="New document">
                         <Button variant="outline" className="w-fit hover:gap-3">
-                            Découvrir <ArrowRight />
+                            Discover <ArrowRight />
                         </Button>
                     </Link>
                 </div>
                 <div className="bg-white rounded-lg"></div>
             </section>
             <section className="py-6 flex flex-col gap-3">
-                <h2>Quelques fonctionnalités</h2>
+                <h2>Some features</h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {features.map((feature, index) => (
                         <FeatureCard
@@ -103,7 +102,7 @@ export default function Home() {
                 </ul>
             </section>
             <section className="py-6 flex flex-col gap-3">
-                <h2>Simple à utiliser</h2>
+                <h2>Easy to use</h2>
                 <Slider items={usage} />
             </section>
         </>
