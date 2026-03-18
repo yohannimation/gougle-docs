@@ -136,7 +136,7 @@ export default function Slider({ items = [] }: SliderProps) {
                             {String(items.length).padStart(2, '0')}
                         </span>
                         <h3 className="mb-2">{item.name}</h3>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-muted-foreground">
                             {item.description}
                         </p>
                     </div>

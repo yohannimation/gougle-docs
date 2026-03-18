@@ -15,43 +15,47 @@ export default function Home() {
     const features: FeatureInterface[] = [
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'Collaboration',
+            name: 'Collaborez',
             description:
-                'lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ',
+                "Chaque frappe est synchronisée en quelques millisecondes. Plusieurs personnes peuvent modifier le même document au même moment sans écraser le travail de l'autre",
         },
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'Text style',
-            description: 'Titre, bold, underline',
+            name: 'Formatez',
+            description:
+                "Une expérience d'écriture et de lecture fluide : titres, gras, italique, surlignement... Tout ce dont vous avez besoin, rien de superflu.",
         },
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'List',
+            name: 'Structurez',
             description:
-                'lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
+                'Ajoutez un tableau en deux clics, ajustez les colonnes, ajoutez des lignes, remplissez les cellules, fusionnez des cellules, ajoutez ou supprimez des lignes à la volée',
         },
         {
             sourceUrl: 'https://localhost:3000',
-            name: 'Table',
+            name: 'Listez',
             description:
-                'lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
+                "Listes à puces, listes numérotées, cases à cocher... Organisez vos notes, vos comptes-rendus ou vos to-do lists sans quitter l'éditeur.",
         },
     ];
 
     const usage: FeatureInterface[] = [
         {
-            name: 'Create',
-            description: 'description1',
+            name: 'Créez',
+            description:
+                'Deux clics suffisent. Votre doc est prêt en une seconde.',
             sourceUrl: 'url',
         },
         {
-            name: 'Share',
-            description: 'description2',
+            name: 'Partagez',
+            description:
+                "Envoyez l'URL à vos collaborateurs. Pas de compte requis pour rejoindre.",
             sourceUrl: 'url',
         },
         {
-            name: 'Edit',
-            description: 'description3',
+            name: 'Editez',
+            description:
+                'Modifiez en temps réel. Les changements se synchronisent instantanément.',
             sourceUrl: 'url',
         },
     ];
