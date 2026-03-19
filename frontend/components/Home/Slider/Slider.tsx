@@ -13,6 +13,7 @@ interface HighlightStyle {
 
 export default function Slider({ items = [] }: SliderProps) {
     const [displayed, setDisplayed] = useState<number>(0);
+    const [isVertical, setIsVertical] = useState<boolean>(false);
     const [fading, setFading] = useState<boolean>(false);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [progressKey, setProgressKey] = useState<number>(0);
@@ -24,10 +25,14 @@ export default function Slider({ items = [] }: SliderProps) {
         width: 0,
     });
 
-    const moveHighlight = useCallback((index) => {
+    const moveHighlight = useCallback((index: number) => {
         const tab = tabsRef.current[index];
         if (!tab) return;
-        setHighlightStyle({ left: tab.offsetLeft, width: tab.offsetWidth });
+        if (window.innerWidth >= 1280) {
+            setHighlightStyle({ left: tab.offsetTop, width: tab.offsetHeight });
+        } else {
+            setHighlightStyle({ left: tab.offsetLeft, width: tab.offsetWidth });
+        }
     }, []);
 
     const goTo = useCallback(
@@ -57,6 +62,13 @@ export default function Slider({ items = [] }: SliderProps) {
         return () => clearInterval(timerRef.current);
     }, [startTimer, moveHighlight]);
 
+    useEffect(() => {
+        const update = () => setIsVertical(window.innerWidth >= 1280);
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
+    }, []);
+
     const handleMouseEnter = (index) => {
         setHoveredIndex(index);
         clearInterval(timerRef.current);
@@ -72,17 +84,31 @@ export default function Slider({ items = [] }: SliderProps) {
     const item = items[displayed];
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
             {/* Tabs */}
-            <div className="p-2 flex gap-1.5 sm:flex-wrap bg-blue-50 border border-blue-200 rounded-3xl shadow-lg">
-                <div className="relative flex w-full items-stretch border border-blue-200 bg-white rounded-xl overflow-hidden group">
+            <div className="w-full p-2 flex gap-1.5 bg-blue-50 border border-blue-200 rounded-3xl shadow-lg xl:flex-col">
+                <div className="relative flex w-full h-full items-stretch border border-blue-200 bg-white rounded-xl overflow-hidden group xl:flex-col">
                     {/* Sliding background */}
                     <div
-                        className="absolute bottom-0 h-full bg-blue-200 group-hover:bg-blue-500 pointer-events-none transition-all duration-200 ease-in-out"
-                        style={{
-                            left: highlightStyle.left,
-                            width: highlightStyle.width,
-                        }}
+                        className="absolute bottom-0 h-full bg-blue-200 group-hover:bg-blue-500 pointer-events-none transition-all duration-200 ease-in-out
+                            left-0 w-full xl:top-auto xl:h-auto
+                            xl:left-[unset] xl:w-[unset]
+                        "
+                        style={
+                            isVertical
+                                ? {
+                                      top: highlightStyle.left,
+                                      height: highlightStyle.width,
+                                      left: 0,
+                                      width: '100%',
+                                  }
+                                : {
+                                      left: highlightStyle.left,
+                                      width: highlightStyle.width,
+                                      top: 0,
+                                      height: '100%',
+                                  }
+                        }
                     />
 
                     {items.map((item, index) => (
@@ -91,12 +117,13 @@ export default function Slider({ items = [] }: SliderProps) {
                             ref={(el) => void (tabsRef.current[index] = el)}
                             onMouseEnter={() => handleMouseEnter(index)}
                             onMouseLeave={handleMouseLeave}
-                            className={`relative flex-1 py-2 px-4 text-center transition-colors font-semibold duration-200 z-10 ${
+                            className={`flex justify-center items-center gap-2 relative flex-1 py-2 px-4 transition-colors font-semibold duration-200 z-10 ${
                                 index === displayed
                                     ? 'text-blue-500 hover:text-white'
                                     : 'text-black hover:text-white'
                             }`}
                         >
+                            {item.icon ?? ''}
                             {item.name}
 
                             {/* Progress bar */}
@@ -116,7 +143,7 @@ export default function Slider({ items = [] }: SliderProps) {
             </div>
 
             {/* Content */}
-            <div className="border border-blue-200 rounded-3xl bg-white shadow-lg">
+            <div className="xl:col-span-2 border border-blue-200 rounded-3xl bg-white shadow-lg">
                 <div
                     className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-start gap-5 transition-opacity duration-200 ${
                         fading ? 'opacity-0' : 'opacity-100'
@@ -124,7 +151,7 @@ export default function Slider({ items = [] }: SliderProps) {
                 >
                     <div className="m-2 mb-0 md:mb-2 md:me-0 aspect-[16/9] rounded-xl overflow-hidden bg-gray-100">
                         {/* <img
-                            src={item.sourceUrl}
+                            src={item.imgUrl}
                             alt={item.name}
                             className="w-full h-full object-cover"
                         /> */}

@@ -1,5 +1,6 @@
 export interface FeatureInterface {
-    sourceUrl: string;
+    imgUrl?: string;
+    icon?: React.ReactNode;
     name: string;
     description: string;
 }

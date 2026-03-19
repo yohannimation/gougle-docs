@@ -8,7 +8,7 @@ import {
 import type { FeatureInterface } from '@/interface/Feature.interface';
 
 export default function FeatureCard({
-    sourceUrl,
+    imgUrl,
     name,
     description,
 }: FeatureInterface) {
@@ -26,7 +26,7 @@ export default function FeatureCard({
             "
         >
             <img
-                src={sourceUrl}
+                src={imgUrl}
                 alt={`Feature image : ${name}`}
                 className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
             />

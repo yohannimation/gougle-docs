@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 import FeatureCard from '@/components/Home/FeatureCard/FeatureCard';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, FilePlusCorner, PencilLine, Share2 } from 'lucide-react';
 
 import type { FeatureInterface } from '@/interface/Feature.interface';
 import Slider from '@/components/Home/Slider/Slider';
@@ -14,28 +14,28 @@ import Slider from '@/components/Home/Slider/Slider';
 export default function Home() {
     const features: FeatureInterface[] = [
         {
-            sourceUrl: 'https://localhost:3000',
             name: 'Collaborate',
             description:
                 "Every keystroke is synchronized within milliseconds. Multiple people can edit the same document at the same time without overwriting each other's work.",
+            imgUrl: 'https://localhost:3000',
         },
         {
-            sourceUrl: 'https://localhost:3000',
             name: 'Format',
             description:
                 'A smooth writing and reading experience: headings, bold, italic, highlighting... Everything you need, nothing unnecessary.',
+            imgUrl: 'https://localhost:3000',
         },
         {
-            sourceUrl: 'https://localhost:3000',
             name: 'Structure',
             description:
                 'Add a table in two clicks, adjust columns, add rows, fill cells, merge cells, add or delete rows on the fly.',
+            imgUrl: 'https://localhost:3000',
         },
         {
-            sourceUrl: 'https://localhost:3000',
             name: 'List',
             description:
                 'Bullet lists, numbered lists, checkboxes... Organize your notes, reports, or to-do lists without leaving the editor.',
+            imgUrl: 'https://localhost:3000',
         },
     ];
 
@@ -44,18 +44,21 @@ export default function Home() {
             name: 'Create',
             description:
                 'Two clicks are all it takes. Your document is ready in a second.',
-            sourceUrl: 'https://localhost:3000',
+            imgUrl: 'https://localhost:3000',
+            icon: <FilePlusCorner className="size-5" />,
         },
         {
             name: 'Share',
             description:
                 'Send the URL to your collaborators. No account required to join.',
-            sourceUrl: 'https://localhost:3000',
+            imgUrl: 'https://localhost:3000',
+            icon: <Share2 className="size-5" />,
         },
         {
             name: 'Edit',
             description: 'Edit in real time. Changes sync instantly.',
-            sourceUrl: 'https://localhost:3000',
+            imgUrl: 'https://localhost:3000',
+            icon: <PencilLine className="size-5" />,
         },
     ];
 
@@ -94,12 +97,21 @@ export default function Home() {
                     {features.map((feature, index) => (
                         <FeatureCard
                             key={index}
-                            sourceUrl={feature.sourceUrl}
+                            imgUrl={feature.imgUrl}
                             name={feature.name}
                             description={feature.description}
                         />
                     ))}
                 </ul>
+                <Link
+                    href="/docs"
+                    className="mx-auto mt-3"
+                    title="New document"
+                >
+                    <Button variant="default" size="lg">
+                        View documents <ArrowRight />
+                    </Button>
+                </Link>
             </section>
             <section className="py-6 flex flex-col gap-3">
                 <h2>Easy to use</h2>
