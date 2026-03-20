@@ -36,6 +36,9 @@ export function useDocuments() {
             try {
                 const response = await documentsApi.create(data);
                 setDocuments((prev) => [response.data, ...prev]);
+
+                window.open(`/docs/${response.data.id}`, '_blank');
+
                 return response.data;
             } catch (err) {
                 setError(
