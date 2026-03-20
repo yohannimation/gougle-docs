@@ -1,17 +1,12 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Lexend } from 'next/font/google';
+import { Raleway, Lexend } from 'next/font/google';
 import './globals.css';
 
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
 
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
+const raleway = Raleway({
+    variable: '--font-raleway',
     subsets: ['latin'],
 });
 
@@ -33,7 +28,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${lexend.variable} antialiased h-dvh flex flex-col`}
+                className={`${raleway.variable} ${lexend.variable} antialiased h-dvh flex flex-col`}
             >
                 <TooltipProvider>
                     {children}
