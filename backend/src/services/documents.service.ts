@@ -17,7 +17,7 @@ export class DocumentService {
     async findAll() {
         // No content returned
         return prisma.document.findMany({
-            orderBy: { updatedAt: 'desc' },
+            orderBy: [{ isEditable: 'asc' }, { updatedAt: 'desc' }],
             select: {
                 id: true,
                 name: true,
