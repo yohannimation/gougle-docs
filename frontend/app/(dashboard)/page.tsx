@@ -6,7 +6,13 @@ import { Button } from '@/components/ui/button';
 
 import FeatureCard from '@/components/Home/FeatureCard/FeatureCard';
 
-import { ArrowRight, FilePlusCorner, PencilLine, Share2 } from 'lucide-react';
+import {
+    ArrowRight,
+    FilePlusCorner,
+    Github,
+    PencilLine,
+    Share2,
+} from 'lucide-react';
 
 import type { FeatureInterface } from '@/interface/Feature.interface';
 import Slider from '@/components/Home/Slider/Slider';
@@ -75,15 +81,17 @@ export default function Home() {
                 "
             >
                 <div className="flex flex-col justify-center gap-3">
-                    <h1>Write together</h1>
+                    <h1>Gougle Docs - Write together</h1>
                     <p>
-                        <strong>Gougle Docs</strong> is a real-time
-                        collaborative editor.
+                        <span className="text-xl font-semibold">
+                            The real-time collaborative text editor
+                        </span>
+                        .
                         <br />
                         Your changes appear instantly for your collaborators
                         without reloading and without conflicts.
                     </p>
-                    <Link href="/docs" className="w-fit" title="New document">
+                    <Link href="/docs" className="w-fit" title="Discover">
                         <Button variant="outline" className="w-fit hover:gap-3">
                             Discover <ArrowRight />
                         </Button>
@@ -106,16 +114,64 @@ export default function Home() {
                 <Link
                     href="/docs"
                     className="mx-auto mt-3"
-                    title="New document"
+                    title="View documents"
                 >
                     <Button variant="default" size="lg">
                         View documents <ArrowRight />
                     </Button>
                 </Link>
             </section>
-            <section className="py-6 flex flex-col gap-3">
+            <section className="py-20 flex flex-col gap-3">
                 <h2>Easy to use</h2>
                 <Slider items={usage} />
+            </section>
+            <hr />
+            <section className="py-20 flex flex-col gap-3">
+                <h2>A project born from curiosity</h2>
+                <p>
+                    Gougle Docs started simply: a lesson on Socket.io, an idea,
+                    and the desire to see how far I could go.
+                    <br />
+                    Rather than building yet another demo project, I wanted to
+                    challenge myself by creating a fully-fledged collaborative
+                    editor from end to end.
+                    <br />
+                    This project was an opportunity to deliberately step out of
+                    my comfort zone and get hands-on with technologies I had
+                    never used before.
+                </p>
+            </section>
+            <section
+                className="
+                    mb-10 p-10
+                    flex flex-col items-center gap-3
+                    rounded-4xl
+                    bg-blue-200
+                    shadow-xl
+                "
+            >
+                <h2>Ready to discover ?</h2>
+                <p>
+                    <span className="text-xl">
+                        It's free, no account required, and open to everyone.
+                    </span>
+                </p>
+                <div className="flex gap-3">
+                    <Link
+                        href="https://github.com/yohannimation/gougle-docs"
+                        className="w-fit"
+                        title="Gougle docs Github"
+                    >
+                        <Button variant="default" className="w-fit">
+                            View more <Github />
+                        </Button>
+                    </Link>
+                    <Link href="/docs" className="w-fit" title="Discover">
+                        <Button variant="outline" className="w-fit">
+                            Discover <ArrowRight />
+                        </Button>
+                    </Link>
+                </div>
             </section>
         </>
     );
