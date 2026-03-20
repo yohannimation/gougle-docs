@@ -25,33 +25,34 @@ export default function Docs() {
     );
 
     return (
-        <div className="relative h-full">
-            <ContextMenu>
-                <ContextMenuTrigger className="flex flex-col h-full">
-                    <h1>Docs</h1>
-                    <ScrollArea className="mt-3 flex-1 min-h-0">
-                        <DocumentsList
-                            documents={documents}
-                            isLoading={isLoading}
-                            deleteDocument={deleteDocument}
-                        />
-                    </ScrollArea>
-                </ContextMenuTrigger>
+        <>
+            <div className="relative h-full">
+                <ContextMenu>
+                    <ContextMenuTrigger className="flex flex-col h-full">
+                        <h1>Docs</h1>
+                        <ScrollArea className="mt-3 flex-1 min-h-0">
+                            <DocumentsList
+                                documents={documents}
+                                isLoading={isLoading}
+                                deleteDocument={deleteDocument}
+                            />
+                        </ScrollArea>
+                    </ContextMenuTrigger>
 
-                <ContextMenuContent>
-                    <ContextMenuItem
-                        onClick={(e) => setCreationDialogOpen(true)}
-                    >
-                        Create new document
-                    </ContextMenuItem>
-                </ContextMenuContent>
-            </ContextMenu>
-
+                    <ContextMenuContent>
+                        <ContextMenuItem
+                            onClick={(e) => setCreationDialogOpen(true)}
+                        >
+                            Create new document
+                        </ContextMenuItem>
+                    </ContextMenuContent>
+                </ContextMenu>
+            </div>
             <DocumentCreationDialog
                 creationDialogOpen={creationDialogOpen}
                 setCreationDialogOpen={setCreationDialogOpen}
                 formik={formik}
             />
-        </div>
+        </>
     );
 }
