@@ -8,7 +8,12 @@ import { EarthIcon, Github, File } from 'lucide-react';
 
 export default function Header() {
     return (
-        <header className="sticky top-0 z-10 backdrop-blur-xl backdrop-grayscale-50 flex justify-between items-center py-4 px-10 border-b-1 shadow-sm">
+        <header
+            className="sticky top-0 z-10 flex justify-between items-center py-4 px-10 border-b-1 shadow-sm"
+            style={{
+                backdropFilter: 'blur(24px) grayscale(50%)',
+            }}
+        >
             <Link
                 href="/"
                 title="Home page"
