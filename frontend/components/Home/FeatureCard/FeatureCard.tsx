@@ -28,7 +28,7 @@ export default function FeatureCard({
             <img
                 src={imgUrl}
                 alt={`Feature image : ${name}`}
-                className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
+                className="relative aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
             />
             <CardHeader>
                 <CardTitle className="overflow-hidden text-ellipsis text-nowrap text-2xl">
