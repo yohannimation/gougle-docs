@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 
@@ -74,13 +75,18 @@ export default function Home() {
                 className="
                     mb-10 p-6
                     grid grid-cols-1 md:grid-cols-2 gap-6
-                    h-[50dvh] md:h-[75dvh]
+                    h-fit md:h-[50dvh] lg:h-[75dvh]
                     rounded-4xl
                     bg-blue-200
                     shadow-xl
                 "
             >
-                <div className="flex flex-col justify-center gap-3">
+                <div
+                    className="
+                        flex flex-col justify-center gap-3
+                        h-fit md:h-full
+                    "
+                >
                     <h1>Gougle Docs - Write together</h1>
                     <p>
                         <span className="text-xl font-semibold">
@@ -92,12 +98,30 @@ export default function Home() {
                         without reloading and without conflicts.
                     </p>
                     <Link href="/docs" className="w-fit" title="Discover">
-                        <Button variant="outline" className="w-fit hover:gap-3">
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            className="w-fit hover:gap-3"
+                        >
                             Discover <ArrowRight />
                         </Button>
                     </Link>
                 </div>
-                <div className="bg-white rounded-lg"></div>
+                <div
+                    className="
+                        relative
+                        h-[35svh] md:h-full
+                        bg-white rounded-lg
+                        overflow-hidden
+                    "
+                >
+                    <Image
+                        src={'/gougle-docs-hero.png'}
+                        alt="application"
+                        fill
+                        className="object-contain"
+                    />
+                </div>
             </section>
             <section className="py-6 flex flex-col gap-3">
                 <h2>Some features</h2>
