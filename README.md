@@ -1,78 +1,86 @@
-# Gougle docs
+# Gougle Docs 📄
 
-A Google-docs app like, using `socket-io` to edit a document with multi-editors.<br/>
-Support markdown and styling features.
+Gougle Docs is a real-time collaborative text editor inspired by modern online writing tools. This project focuses on seamless collaboration, performance, and the exploration of advanced frontend and backend technologies.
 
->   This project is a educational project.<br/>
-    Don't use it to save your personal data.<br/>
-    Each hour, the documents created will be removed.
+![Trello App Screenshot](./frontend/public/gougle-docs-readme.png)
+
+## 🚀 Demo
+
+See it [on Yohannimation](https://gougle-docs.yohannimation.fr)
 
 ## 🧰 Tech Stack
 
 ### Frontend
 
-- ⚙️ Next.JS - Front-end framework
-- 🟦 TypeScript - Type safety
-- 💠 Shadcn - UI component library
-- 📄 TipTap - Text editor library
+- ⚙️ **Next.js** (SSR)
+- 🟦 **TypeScript**
+- ✍️ **Tiptap** (rich text editor)
+- 🔄 **Y.js** (CRDT)
+- 🔗 **Socket.io** (real-time communication)
+- 🧩 **Shadcn UI** + **TailwindCSS** (user interface)
 
 ### Backend
 
-- ⚙️ Node.JS - Back-end framework
-- 🟦 TypeScript - Type safety
-- 🛣️ Express - API structure
-- 🔗 Socket.io - Websocket link
+- ⚙️ **Node.js**
+- 🟦 **TypeScript**
+- 🛣️ **Express**
+- 🔗 **Socket.io**
 
-## Structure
+### Database
 
-```
-.
-├── backend/
-│   ├── Dockerfile
-│   └── .env
-├── frontend/
-│   └── Dockerfile
-├── compose.yaml
-├── .env
-└── README.md
-```
+- 🐘 **PostgreSQL**
+    - Document storage in JSON (adapted for Tiptap)
 
-## Installation
+## 🎯 Project Goal
 
-### Clone repo
+This project was created as part of a learning process. After discovering Socket.io through a small class project, the goal was to go further by building a complete application.
 
-```
-git clone <repo>
-cd gougle-docs
-```
+- Step out of my comfort zone
+- Explore new tools (Y.js, Tiptap, SSR with Next.js)
+- Understand the challenges of real-time collaboration
 
-### Edit `.env` files
+## ✨ Features
 
-- Rename the `.env.dist` file to `.env` in the project root and backend folder.
-- Edit the files to set the values.
+- ✍️ Rich text editing :
+    - Headings
+    - Paragraphs
+    - Bold, italic, underline, strikethrough
+    - Highlighting
+    - Links
+    - Dividers
+- 📋 Advanced formatting :
+    - Bullet lists
+    - Numbered lists
+    - Checkboxes
+    - Tables
+    - Text alignment
+    - Markdown support
+- 🤝 Real-time collaboration :
+    - Instant synchronization between users
+    - Automatic assignment of a random animal + color to identify each connected user
+- 💾 Document management :
+    - Create, read, update, and delete (CRUD)
+    - Auto-save with a backend debounce system to avoid overloading the database
 
-## Docker
+## 🧭 Planned Features
 
-### Build the containers
+- 🔐 Authentication system (login / signup)
+- 📁 Folder management / document organization
+- 📤 Document export (PDF, Markdown…)
 
-Download images and create volumes : ```docker compose up --build```
+## 🐳 Docker
 
-### Start containers
+| Action                        | Command                                                      |
+|-------------------------------|--------------------------------------------------------------|
+| Build and start container     | `docker compose up --build`                                  |
+| Start containers              | `docker compose up`                                          |
+| Stop containers               | `docker compose down`                                        |
+| Access **frontend** container | `docker compose exec gougle-docs-frontend sh`                |
+| Access **backend** container  | `docker compose exec gougle-docs-backend sh`                 |
+| Prisma migration              | `docker compose exec gougle-docs-backend npx prisma bd push` |
 
-To start the project containers : ```docker compose up```
+## 🙋‍♂️ Author
 
-### Stop containers
+Created by **Yohann RENAULD**
 
-To stop the project containers : ```docker compose down```
-
-### Go to one container
-
-- Frontend : ```docker compose exec -it frontend sh```
-- Backend : ```docker compose exec -it backend sh```
-
-### Prisma migration
-
-The compose will generate the prisma TypeScript.<br/>
-To generate the table we must execute a migration : ```docker compose exec backend npx prisma db push```
-
-## 
+[Github](https://github.com/yohannimation) - [Portfolio yohannimation](https://yohannimation.fr)
