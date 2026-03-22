@@ -24,25 +24,25 @@ export default function Home() {
             name: 'Collaborate',
             description:
                 "Every keystroke is synchronized within milliseconds. Multiple people can edit the same document at the same time without overwriting each other's work.",
-            imgUrl: 'https://localhost:3000',
+            imgUrl: '/collaborative.mp4',
         },
         {
             name: 'Format',
             description:
                 'A smooth writing and reading experience: headings, bold, italic, highlighting... Everything you need, nothing unnecessary.',
-            imgUrl: 'https://localhost:3000',
+            imgUrl: '/format.mp4',
         },
         {
             name: 'Structure',
             description:
                 'Add a table in two clicks, adjust columns, add rows, fill cells, merge cells, add or delete rows on the fly.',
-            imgUrl: 'https://localhost:3000',
+            imgUrl: '/structure.mp4',
         },
         {
             name: 'List',
             description:
                 'Bullet lists, numbered lists, checkboxes... Organize your notes, reports, or to-do lists without leaving the editor.',
-            imgUrl: 'https://localhost:3000',
+            imgUrl: '/list.mp4',
         },
     ];
 
@@ -100,7 +100,7 @@ export default function Home() {
                     <Link href="/docs" className="w-fit" title="Discover">
                         <Button
                             variant="outline"
-                            size="lg"
+                            size="xl"
                             className="w-fit hover:gap-3"
                         >
                             Discover <ArrowRight />
@@ -137,10 +137,10 @@ export default function Home() {
                 </ul>
                 <Link
                     href="/docs"
-                    className="mx-auto mt-3"
+                    className="mx-auto mt-20"
                     title="View documents"
                 >
-                    <Button variant="default" size="lg">
+                    <Button variant="default" size="xl">
                         View documents <ArrowRight />
                     </Button>
                 </Link>
