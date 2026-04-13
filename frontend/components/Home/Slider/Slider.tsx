@@ -117,7 +117,7 @@ export default function Slider({ items = [] }: SliderProps) {
                             ref={(el) => void (tabsRef.current[index] = el)}
                             onMouseEnter={() => handleMouseEnter(index)}
                             onMouseLeave={handleMouseLeave}
-                            className={`flex justify-center items-center gap-2 relative flex-1 py-2 px-4 transition-colors font-semibold duration-200 z-10 ${
+                            className={`flex justify-center items-center gap-2 relative flex-1 py-2 px-4 transition-colors font-semibold duration-200 ${
                                 index === displayed
                                     ? 'text-blue-500 hover:text-white'
                                     : 'text-black hover:text-white'
