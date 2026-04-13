@@ -10,6 +10,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - gougle-docs-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   backend:
     build:
@@ -24,7 +30,9 @@ services:
     ports:
       - "3001:3001"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    restart: on-failure
     networks:
       - gougle-docs-network
       - npm
