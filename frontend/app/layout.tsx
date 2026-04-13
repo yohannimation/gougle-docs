@@ -28,7 +28,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${raleway.variable} ${lexend.variable} antialiased flex flex-col`}
+                className={`${raleway.variable} ${lexend.variable} antialiased`}
             >
                 <TooltipProvider>
                     {children}

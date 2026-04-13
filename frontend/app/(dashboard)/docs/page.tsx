@@ -26,9 +26,9 @@ export default function Docs() {
 
     return (
         <>
-            <div className="relative h-full">
+            <div className="relative flex-1 mb-6">
                 <ContextMenu>
-                    <ContextMenuTrigger className="flex flex-col h-full">
+                    <ContextMenuTrigger className="flex flex-col flex-1">
                         <h1>Docs</h1>
                         <ScrollArea className="mt-3 flex-1 min-h-0">
                             <DocumentsList

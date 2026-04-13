@@ -69,7 +69,7 @@ export default function DocumentCreationDialog({
                         <Button
                             variant="default"
                             size="icon-lg"
-                            className="fixed bottom-8 right-8 rounded-full size-15"
+                            className="sticky bottom-8 ms-auto rounded-full size-15"
                             onClick={(e) => openDialog()}
                         >
                             <FilePlusCorner className="size-8" />
